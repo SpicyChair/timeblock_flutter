@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grid_planner_test/model/current_day_model.dart';
-import 'package:grid_planner_test/screens/grid_planner_draggable.dart';
+import 'package:grid_planner_test/screens/grid_planner_screen.dart';
 import 'package:provider/provider.dart';
 import 'model/activity_base.dart';
 
@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
       ),
-      home: const GridPlannerDrag(),
+      home: const GridPlannerScreen(),
     );
   }
 }
