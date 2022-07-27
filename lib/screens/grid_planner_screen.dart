@@ -1,13 +1,17 @@
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:drag_select_grid_view/drag_select_grid_view.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:grid_planner_test/components/activity_tile.dart';
 import 'package:grid_planner_test/components/selectable_item.dart';
 import 'package:grid_planner_test/model/activity_base.dart';
 import 'package:grid_planner_test/model/current_day_model.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:grid_planner_test/model/time_interval.dart';
+import 'package:grid_planner_test/screens/new_activity_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+import '../components/new_activity_dialog.dart';
+import '../constants.dart';
 import '../model/saved_activity.dart';
 
 class GridPlannerScreen extends StatefulWidget {
@@ -26,13 +30,11 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
   //find the "actual" index of the items
   //since we have 168 items (24 items represent time)
   int getActualIndexOf(int index) => (index - (index ~/ 7)).round() - 1;
+
   List<int> getActualIndexes() => selectedIndexes()
       .map((index) => getActualIndexOf(index))
       .toSet()
       .toList();
-
-  Color pickerColor = Colors.blueAccent;
-  Color currentColor = Colors.blueAccent;
 
   @override
   void initState() {
@@ -76,159 +78,6 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
   }
 
   // AlertDialogs for setting activities
-
-  Future<void> openColorPicker() async {
-    await showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Pick a color!'),
-          content: SingleChildScrollView(
-            child: BlockPicker(
-              pickerColor: pickerColor,
-              onColorChanged: (Color color) {
-                setState(() {
-                  pickerColor = color;
-                  currentColor = color;
-                });
-              },
-            ),
-          ),
-          actions: <Widget>[
-            ElevatedButton(
-              onPressed: () {
-                setState(() => currentColor = pickerColor);
-                Navigator.of(context).pop();
-              },
-              child: const Text('Got it'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<void> showSavedActivitySelectionDialog() async {
-    await showDialog(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(builder: (context, setState) {
-          return AlertDialog(
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(20.0))),
-            title: const Text('Choose Activity'),
-            content: SizedBox(
-              height: 300,
-              width: double.maxFinite,
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount:
-                    Provider.of<ActivityBase>(context, listen: true).getSize(),
-                itemBuilder: (context, index) {
-                  return Consumer<ActivityBase>(
-                      builder: (context, activityBase, child) {
-                    return Card(
-                      child: ListTile(
-                        onTap: () {
-                          setActivityToSelectedIntervals(index);
-                          Navigator.of(context).pop();
-                        },
-                        title: Text(activityBase.activities[index].name),
-                        leading: Container(
-                          height: 25,
-                          width: 25,
-                          decoration: BoxDecoration(
-                            color: activityBase.activities[index].color,
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                        ),
-                      ),
-                    );
-                  });
-                },
-              ),
-            ),
-            actions: <Widget>[
-              ElevatedButton(
-                onPressed: () async {
-                  await showCreateNewActivityDialog();
-                  setState(() {});
-                },
-                child: const Text('Create Activity'),
-              ),
-              ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Close'),
-              ),
-            ],
-          );
-        });
-      },
-    );
-  }
-
-  Future<void> showCreateNewActivityDialog() async {
-    String newActivityName = "";
-    await showDialog(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(builder: (context, setState) {
-          return AlertDialog(
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(20.0))),
-            title: const Text('Create Activity'),
-            content: SizedBox(
-              height: 300,
-              width: double.maxFinite,
-              child: ListView(
-                shrinkWrap: true,
-                physics: const ClampingScrollPhysics(),
-                children: [
-                  ListTile(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    tileColor: currentColor,
-                    title: const Center(child: Text("Change Color")),
-                    onTap: () async {
-                      await openColorPicker();
-                      setState(() {});
-                    },
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  TextField(
-                    onChanged: (newValue) {
-                      newActivityName = newValue;
-                    },
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderSide: const BorderSide(width: 1.0),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      hintText: 'Enter activity name',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              ElevatedButton(
-                onPressed: () {
-                  Provider.of<ActivityBase>(context, listen: false)
-                      .createNewActivity(newActivityName, currentColor);
-
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Create Activity'),
-              ),
-            ],
-          );
-        });
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -330,11 +179,11 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
             height: 30,
           ),
           createSelectedTitle(),
-          const SizedBox(
-            height: 30,
-          ),
           createSelectActivityPanel(),
-          createActivityActionButtons(),
+          const SizedBox(
+            height: 20,
+          ),
+          createActivityPanelActionButtons(),
         ],
       ),
     );
@@ -368,7 +217,7 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
         children: <TextSpan>[
           const TextSpan(text: 'Selected: '),
           TextSpan(
-              text: '${selectedIndexes().length}',
+              text: '${getActualIndexes().length}',
               style: const TextStyle(fontWeight: FontWeight.bold)),
         ],
       ),
@@ -376,66 +225,234 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
   }
 
   Widget createSelectActivityPanel() {
-    return SizedBox(
-      height: 300,
-      width: double.maxFinite,
-      child: GridView.builder(
-        shrinkWrap: true,
-        itemCount: Provider.of<ActivityBase>(context, listen: true).getSize(),
-        itemBuilder: (context, index) {
-          return Consumer<ActivityBase>(
-            builder: (context, activityBase, child) {
-              return Container(
-                height: 70,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  border: Border.all(
-                      width: 4, color: activityBase.activities[index].color),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(activityBase.activities[index].name),
-                    IconButton(
-                      icon: const Icon(Icons.more_vert_rounded),
-                      onPressed: () {},
-                    )
-                  ],
-                ),
+    int itemCount = Provider.of<ActivityBase>(context, listen: true).getSize();
+    ScrollController controller = ScrollController();
+    return ClipRRect(
+      borderRadius: kMediumBorderRadius,
+      child: SizedBox(
+        width: double.maxFinite,
+        height: 300,
+        child: Scrollbar(
+          controller: controller,
+          child: GridView.builder(
+            shrinkWrap: true,
+            itemCount: itemCount,
+            itemBuilder: (context, index) {
+              return Consumer<ActivityBase>(
+                builder: (context, activityBase, child) {
+                  SavedActivity activity = activityBase.activities[index];
+                  return ActivityTile(
+                    title: activity.name,
+                    icon: "",
+                    color: activity.color,
+                  );
+                },
               );
             },
-          );
-        },
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          // 1 item to represent the time on each row, 6 SelectableItems
-          crossAxisCount: 2,
-          crossAxisSpacing: 6.0,
-          mainAxisSpacing: 6.0,
-          childAspectRatio: 3,
+            controller: controller,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              // 1 item to represent the time on each row, 6 SelectableItems
+              crossAxisCount: 2,
+              crossAxisSpacing: 7.0,
+              mainAxisSpacing: 7.0,
+              childAspectRatio: 2.5,
+            ),
+          ),
         ),
       ),
     );
   }
 
-  Widget createActivityActionButtons() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        TextButton(
-          onPressed: () {},
-          child: const Text("Edit"),
-        ),
-        ElevatedButton(
-          onPressed: () async {
-            await showCreateNewActivityDialog();
-            setState(() {});
-          },
+  Widget createActivityPanelActionButtons() {
+    return SizedBox(
+      width: double.maxFinite,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: OutlinedButton(
+              onPressed: () {},
+              style: TextButton.styleFrom(
+                  side: BorderSide(width: 1, color: Colors.grey.shade300)),
+              child: const Text("Edit"),
+            ),
+          ),
+          const SizedBox(
+            width: 20,
+          ),
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () async {
+                await showCreateNewActivityDialog();
+                setState(() {});
+              },
+              child: const Text("New Activity"),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-          child:
-            const Text("New Activity"),
+  Color pickerColor = Colors.blueAccent;
+  Color currentColor = Colors.blueAccent;
+  String emojiIcon = "";
 
+  Future<void> showCreateNewActivityDialog() async {
+    String newActivityName = "";
+    await showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return StatefulBuilder(builder: (context, setState) {
+                return AlertDialog(
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(15),
+                    ),
+                  ),
+                  title: const Text('New Activity'),
+                  content: SizedBox(
+                    height: 250,
+                    width: double.maxFinite,
+                    child: ListView(
+                      shrinkWrap: true,
+                      physics: const ClampingScrollPhysics(),
+                      children: [
+                        ListTile(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: kMediumBorderRadius,
+                            side: BorderSide(
+                                width: 2, color: Colors.grey.shade300),
+                          ),
+                          title: const Center(child: Text("Change Icon")),
+                          onTap: () async {
+                            await showEmojiPickerDialog();
+                            setState(() {});
+                          },
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        ListTile(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: kMediumBorderRadius,
+                          ),
+                          tileColor: currentColor,
+                          title: const Center(child: Text("Change Color")),
+                          onTap: () async {
+                            await showColorPickerDialog();
+                            setState(() {});
+                          },
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        TextField(
+                          onChanged: (newValue) {
+                            newActivityName = newValue;
+                          },
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderSide: const BorderSide(width: 1.0),
+                              borderRadius: kMediumBorderRadius,
+                            ),
+                            hintText: 'Enter activity name',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text("Cancel"),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Provider.of<ActivityBase>(context, listen: false)
+                            .createNewActivity(newActivityName, currentColor);
+
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Create Activity'),
+                    ),
+                  ],
+                );
+              });
+            },
+          );
+        });
+  }
+
+  Future<void> showColorPickerDialog() async {
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(15),
+          ),
         ),
-      ],
+        content: SingleChildScrollView(
+          child: MaterialPicker(
+            pickerColor: pickerColor,
+            onColorChanged: (Color color) {
+              setState(() {
+                pickerColor = color;
+                currentColor = color;
+              });
+            },
+          ),
+        ),
+        actions: <Widget>[
+          ElevatedButton(
+            child: const Text('Select'),
+            onPressed: () {
+              setState(() => currentColor = pickerColor);
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text("Cancel"))
+        ],
+      ),
+    );
+  }
+
+  Future<void> showEmojiPickerDialog() async {
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(15),
+          ),
+        ),
+        content: SingleChildScrollView(
+          child: EmojiPicker(
+            onEmojiSelected: (category, emoji) {
+              setState(() {
+                emojiIcon = emoji as String;
+              });
+            },
+          ),
+        ),
+        actions: <Widget>[
+          ElevatedButton(
+            child: const Text('Select'),
+            onPressed: () {
+              setState(() => currentColor = pickerColor);
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text("Cancel"))
+        ],
+      ),
     );
   }
 }

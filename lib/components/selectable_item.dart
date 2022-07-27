@@ -81,7 +81,7 @@ class _SelectableItemState extends State<SelectableItem>
       child: Container(
         alignment: Alignment.center,
         child: Text(
-          '${widget.index}',
+          "",//'${widget.index}',
 
           textAlign: TextAlign.center,
           style: const TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
