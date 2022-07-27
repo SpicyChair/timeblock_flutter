@@ -19,6 +19,18 @@ class GridPlannerScreen extends StatefulWidget {
 
 class _GridPlannerScreenState extends State<GridPlannerScreen> {
   final gridviewController = DragSelectGridViewController();
+
+  //get the selected indexes of the gridview
+  Set<int> selectedIndexes() => gridviewController.value.selectedIndexes;
+
+  //find the "actual" index of the items
+  //since we have 168 items (24 items represent time)
+  int getActualIndexOf(int index) => (index - (index ~/ 7)).round() - 1;
+  List<int> getActualIndexes() => selectedIndexes()
+      .map((index) => getActualIndexOf(index))
+      .toSet()
+      .toList();
+
   Color pickerColor = Colors.blueAccent;
   Color currentColor = Colors.blueAccent;
 
@@ -46,8 +58,7 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
     //print("called setActivity with index $activityIndex");
     //print(gridviewController.value.selectedIndexes);
 
-    for (var selected in gridviewController.value.selectedIndexes) {
-      selected = (selected - (selected ~/ 7)).round() - 1;
+    for (var selected in getActualIndexes()) {
       currentDayProvider.setActivityAtInterval(selected, activityIndex);
     }
 
@@ -58,8 +69,7 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
     var currentDayProvider =
         Provider.of<CurrentDayModel>(context, listen: false);
 
-    for (var selected in gridviewController.value.selectedIndexes) {
-      selected = (selected - (selected ~/ 7)).round() - 1;
+    for (var selected in getActualIndexes()) {
       currentDayProvider.removeActivityAtInterval(selected);
     }
     gridviewController.clear();
@@ -208,6 +218,7 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
                 onPressed: () {
                   Provider.of<ActivityBase>(context, listen: false)
                       .createNewActivity(newActivityName, currentColor);
+
                   Navigator.of(context).pop();
                 },
                 child: const Text('Create Activity'),
@@ -222,36 +233,17 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Grid Planner"),
-        centerTitle: true,
-      ),
-
-      //if the controller value is empty, ie no selected tiles, show a container
-      //else show a FAB which clears any selected tiles
       body: SlidingUpPanel(
-        panel: Center(
-          child: Text("Sliding Up Panel"),
-        ),
+        panel: createSlidingPanel(),
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(24.0),
           topRight: Radius.circular(24.0),
         ),
-        header: Center(
-          child: Container(
-            decoration: const BoxDecoration(
-              color: Colors.grey,
-              borderRadius: BorderRadius.all(Radius.circular(24.0),),
-            ),
-            height: 5,
-            width: 50,
-          ),
-        ),
         body: ListView(
-          physics: const BouncingScrollPhysics(),
+          //physics: const BouncingScrollPhysics(),
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(10, 15, 10, 15),
+              padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
               child: DragSelectGridView(
                 shrinkWrap: true,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -273,9 +265,7 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
                       ),
                     );
                   } else {
-                    //find the "actual" index of the items
-                    //since we have 168 items (24 items represent time)
-                    final actualIndex = (index - (index ~/ 7)).round() - 1;
+                    final actualIndex = getActualIndexOf(index);
                     //border radius of corners
                     Radius corner = const Radius.circular(10);
                     //default border radius
@@ -319,9 +309,133 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
                 gridController: gridviewController,
               ),
             ),
+            const SizedBox(
+              height: 100,
+            ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget createSlidingPanel() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          createSlideUpIndicator(),
+          const SizedBox(
+            height: 30,
+          ),
+          createSelectedTitle(),
+          const SizedBox(
+            height: 30,
+          ),
+          createSelectActivityPanel(),
+          createActivityActionButtons(),
+        ],
+      ),
+    );
+  }
+
+  Widget createSlideUpIndicator() {
+    return Center(
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.grey[300],
+          borderRadius: const BorderRadius.all(
+            Radius.circular(24.0),
+          ),
+        ),
+        height: 5,
+        width: 50,
+      ),
+    );
+  }
+
+  Widget createSelectedTitle() {
+    if (selectedIndexes().isEmpty) {
+      return const Text("Current Activity: ");
+    }
+    return RichText(
+      text: TextSpan(
+        style: const TextStyle(
+          fontSize: 14.0,
+          color: Colors.black,
+        ),
+        children: <TextSpan>[
+          const TextSpan(text: 'Selected: '),
+          TextSpan(
+              text: '${selectedIndexes().length}',
+              style: const TextStyle(fontWeight: FontWeight.bold)),
+        ],
+      ),
+    );
+  }
+
+  Widget createSelectActivityPanel() {
+    return SizedBox(
+      height: 300,
+      width: double.maxFinite,
+      child: GridView.builder(
+        shrinkWrap: true,
+        itemCount: Provider.of<ActivityBase>(context, listen: true).getSize(),
+        itemBuilder: (context, index) {
+          return Consumer<ActivityBase>(
+            builder: (context, activityBase, child) {
+              return Container(
+                height: 70,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(
+                      width: 4, color: activityBase.activities[index].color),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(activityBase.activities[index].name),
+                    IconButton(
+                      icon: const Icon(Icons.more_vert_rounded),
+                      onPressed: () {},
+                    )
+                  ],
+                ),
+              );
+            },
+          );
+        },
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          // 1 item to represent the time on each row, 6 SelectableItems
+          crossAxisCount: 2,
+          crossAxisSpacing: 6.0,
+          mainAxisSpacing: 6.0,
+          childAspectRatio: 3,
+        ),
+      ),
+    );
+  }
+
+  Widget createActivityActionButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        TextButton(
+          onPressed: () {},
+          child: const Text("Edit"),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            await showCreateNewActivityDialog();
+            setState(() {});
+          },
+
+          child:
+            const Text("New Activity"),
+
+        ),
+      ],
     );
   }
 }
