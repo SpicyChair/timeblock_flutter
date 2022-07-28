@@ -64,27 +64,30 @@ class _SelectableItemState extends State<SelectableItem>
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _scaleAnimation,
-      builder: (context, child) {
-        return Transform.scale(
-          scale: _scaleAnimation.value,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: calculateColor(),
-              borderRadius: widget.radius,
+    return Padding(
+      padding: const EdgeInsets.all(2.2),
+      child: AnimatedBuilder(
+        animation: _scaleAnimation,
+        builder: (context, child) {
+          return Transform.scale(
+            scale: _scaleAnimation.value,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: calculateColor(),
+                borderRadius: widget.radius,
+              ),
+              child: child,
             ),
-            child: child,
-          ),
-        );
-      },
-      child: Container(
-        alignment: Alignment.center,
-        child: Text(
-          "",//'${widget.index}',
+          );
+        },
+        child: Container(
+          alignment: Alignment.center,
+          child: Text(
+            "",//'${widget.index}',
 
-          textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+          ),
         ),
       ),
     );

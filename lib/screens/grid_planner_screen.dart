@@ -27,14 +27,6 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
   //get the selected indexes of the gridview
   Set<int> selectedIndexes() => gridviewController.value.selectedIndexes;
 
-  //find the "actual" index of the items
-  //since we have 168 items (24 items represent time)
-  int getActualIndexOf(int index) => (index - (index ~/ 7)).round() - 1;
-
-  List<int> getActualIndexes() => selectedIndexes()
-      .map((index) => getActualIndexOf(index))
-      .toSet()
-      .toList();
 
   @override
   void initState() {
@@ -60,7 +52,7 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
     //print("called setActivity with index $activityIndex");
     //print(gridviewController.value.selectedIndexes);
 
-    for (var selected in getActualIndexes()) {
+    for (var selected in selectedIndexes()) {
       currentDayProvider.setActivityAtInterval(selected, activityIndex);
     }
 
@@ -71,7 +63,7 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
     var currentDayProvider =
         Provider.of<CurrentDayModel>(context, listen: false);
 
-    for (var selected in getActualIndexes()) {
+    for (var selected in selectedIndexes()) {
       currentDayProvider.removeActivityAtInterval(selected);
     }
     gridviewController.clear();
@@ -83,6 +75,7 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SlidingUpPanel(
+        maxHeight: 420,
         panel: createSlidingPanel(),
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(24.0),
@@ -92,70 +85,86 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
           //physics: const BouncingScrollPhysics(),
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
-              child: DragSelectGridView(
-                shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  // 1 item to represent the time on each row, 6 SelectableItems
-                  crossAxisCount: 7,
-                  crossAxisSpacing: 4.0,
-                  mainAxisSpacing: 4.0,
-                ),
-                itemCount: 168,
-                itemBuilder: (context, index, selected) {
-                  if (index % 7 == 0) {
-                    return AspectRatio(
-                      aspectRatio: 1,
-                      child: Center(
-                        child: Text(
-                          "${index ~/ 7}:00".padLeft(5, '0'),
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
+              padding:
+                  EdgeInsets.zero, //const EdgeInsets.fromLTRB(10, 20, 10, 10),
+              child: Row(
+                children: [
+                  Flexible(
+                    flex: 1,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        for (int i = 0; i < 24; i++)
+                          AspectRatio(
+                            aspectRatio: 1,
+                            child: Center(
+                              child: Text(
+                                "$i:00".padLeft(5, '0'),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  Flexible(
+                    flex: 6,
+                    child: DragSelectGridView(
+                      shrinkWrap: true,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        // 1 item to represent the time on each row, 6 SelectableItems
+                        crossAxisCount: 6,
+                        crossAxisSpacing: 0,
+                        mainAxisSpacing: 0,
                       ),
-                    );
-                  } else {
-                    final actualIndex = getActualIndexOf(index);
-                    //border radius of corners
-                    Radius corner = const Radius.circular(10);
-                    //default border radius
-                    BorderRadius radius = BorderRadius.zero;
-                    //round the corners of the 4 items in the corners
-                    switch (actualIndex) {
-                      case 0:
-                        radius = BorderRadius.only(topLeft: corner);
-                        break;
-                      case 5:
-                        radius = BorderRadius.only(topRight: corner);
-                        break;
-                      case 138:
-                        radius = BorderRadius.only(bottomLeft: corner);
-                        break;
-                      case 143:
-                        radius = BorderRadius.only(bottomRight: corner);
-                        break;
-                    }
-
-                    return Consumer2<ActivityBase, CurrentDayModel>(
-                      builder: (context, activityBase, currentDay, child) {
-                        Color color = Colors.grey;
-
-                        if (currentDay.hasActivityAtInterval(actualIndex)) {
-                          var activityIndex =
-                              currentDay.intervals[actualIndex] ?? 0;
-                          color = activityBase.activities[activityIndex].color;
+                      itemCount: 144,
+                      itemBuilder: (context, index, selected) {
+                        //border radius of corners
+                        Radius corner = const Radius.circular(10);
+                        //default border radius
+                        BorderRadius radius = BorderRadius.zero;
+                        //round the corners of the 4 items in the corners
+                        switch (index) {
+                          case 0:
+                            radius = BorderRadius.only(topLeft: corner);
+                            break;
+                          case 5:
+                            radius = BorderRadius.only(topRight: corner);
+                            break;
+                          case 138:
+                            radius = BorderRadius.only(bottomLeft: corner);
+                            break;
+                          case 143:
+                            radius = BorderRadius.only(bottomRight: corner);
+                            break;
                         }
 
-                        return SelectableItem(
-                          index: actualIndex,
-                          color: color,
-                          selected: selected,
-                          radius: radius,
+                        return Consumer2<ActivityBase, CurrentDayModel>(
+                          builder: (context, activityBase, currentDay, child) {
+                            Color color = Colors.grey;
+
+                            if (currentDay.hasActivityAtInterval(index)) {
+                              var activityIndex =
+                                  currentDay.intervals[index] ?? 0;
+                              color =
+                                  activityBase.activities[activityIndex].color;
+                            }
+
+                            return SelectableItem(
+                              index: index,
+                              color: color,
+                              selected: selected,
+                              radius: radius,
+                            );
+                          },
                         );
                       },
-                    );
-                  }
-                },
-                gridController: gridviewController,
+                      gridController: gridviewController,
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(
@@ -217,7 +226,7 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
         children: <TextSpan>[
           const TextSpan(text: 'Selected: '),
           TextSpan(
-              text: '${getActualIndexes().length}',
+              text: '${selectedIndexes().length}',
               style: const TextStyle(fontWeight: FontWeight.bold)),
         ],
       ),
@@ -231,33 +240,39 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
       borderRadius: kMediumBorderRadius,
       child: SizedBox(
         width: double.maxFinite,
-        height: 300,
+        height: 275,
         child: Scrollbar(
           controller: controller,
-          child: GridView.builder(
-            shrinkWrap: true,
-            itemCount: itemCount,
-            itemBuilder: (context, index) {
-              return Consumer<ActivityBase>(
-                builder: (context, activityBase, child) {
-                  SavedActivity activity = activityBase.activities[index];
-                  return ActivityTile(
-                    title: activity.name,
-                    icon: "",
-                    color: activity.color,
-                  );
-                },
-              );
-            },
-            controller: controller,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              // 1 item to represent the time on each row, 6 SelectableItems
-              crossAxisCount: 2,
-              crossAxisSpacing: 7.0,
-              mainAxisSpacing: 7.0,
-              childAspectRatio: 2.5,
-            ),
-          ),
+          child: itemCount == 0
+              ? const Center(
+                  child: Text(
+                    "Add a new activity below!",
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                )
+              : GridView.builder(
+                  itemCount: itemCount,
+                  itemBuilder: (context, index) {
+                    return Consumer<ActivityBase>(
+                      builder: (context, activityBase, child) {
+                        SavedActivity activity = activityBase.activities[index];
+                        return ActivityTile(
+                          title: activity.name,
+                          icon: "",
+                          color: activity.color,
+                        );
+                      },
+                    );
+                  },
+                  controller: controller,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    // 1 item to represent the time on each row, 6 SelectableItems
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 7.0,
+                    mainAxisSpacing: 7.0,
+                    childAspectRatio: 2.5,
+                  ),
+                ),
         ),
       ),
     );
@@ -328,7 +343,6 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
                           ),
                           title: const Center(child: Text("Change Icon")),
                           onTap: () async {
-                            await showEmojiPickerDialog();
                             setState(() {});
                           },
                         ),
@@ -402,40 +416,6 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
               setState(() {
                 pickerColor = color;
                 currentColor = color;
-              });
-            },
-          ),
-        ),
-        actions: <Widget>[
-          ElevatedButton(
-            child: const Text('Select'),
-            onPressed: () {
-              setState(() => currentColor = pickerColor);
-              Navigator.of(context).pop();
-            },
-          ),
-          TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text("Cancel"))
-        ],
-      ),
-    );
-  }
-
-  Future<void> showEmojiPickerDialog() async {
-    await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(15),
-          ),
-        ),
-        content: SingleChildScrollView(
-          child: EmojiPicker(
-            onEmojiSelected: (category, emoji) {
-              setState(() {
-                emojiIcon = emoji as String;
               });
             },
           ),
