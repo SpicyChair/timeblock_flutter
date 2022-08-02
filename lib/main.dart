@@ -25,8 +25,8 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       darkTheme: ThemeData(
         brightness: Brightness.dark,
-
       ),
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(useMaterial3: true),
       home: const GridPlannerScreen(),
     );
