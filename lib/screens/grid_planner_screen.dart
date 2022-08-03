@@ -12,6 +12,7 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 
 import '../constants.dart';
+import '../model/gridview_controller.dart';
 import '../model/saved_activity.dart';
 
 class GridPlannerScreen extends StatefulWidget {
@@ -22,10 +23,12 @@ class GridPlannerScreen extends StatefulWidget {
 }
 
 class _GridPlannerScreenState extends State<GridPlannerScreen> {
-  final gridviewController = DragSelectGridViewController();
+  var gridviewController = DragSelectGridViewController();
 
   //get the selected indexes of the gridview
-  Set<int> selectedIndexes() => gridviewController.value.selectedIndexes;
+  Set<int> selectedIndexes() =>
+
+      gridviewController.value.selectedIndexes;
 
   @override
   void initState() {
@@ -45,14 +48,14 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
 
   // methods for editing the CurrentDayModel
 
-  void setActivityToSelectedIntervals(int activityIndex) {
+  void setActivityToSelectedIntervals(String activityKey) {
     var currentDayProvider =
         Provider.of<CurrentDayModel>(context, listen: false);
-    //print("called setActivity with index $activityIndex");
+    //print("called setActivity with index $activityKey");
     //print(gridviewController.value.selectedIndexes);
 
     for (var selected in selectedIndexes()) {
-      currentDayProvider.setActivityAtInterval(selected, activityIndex);
+      currentDayProvider.setActivityAtInterval(selected, activityKey);
     }
 
     gridviewController.clear();
@@ -77,6 +80,7 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
         maxHeight: 420,
         panel: SlidingPanel(
           selectedIndexes: selectedIndexes,
+          setActivityToSelectedIndexes: setActivityToSelectedIntervals,
         ),
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(24.0),
@@ -143,14 +147,13 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
                         }
 
                         return Consumer2<ActivityBase, CurrentDayModel>(
-                          builder: (context, activityBase, currentDay, child) {
+                          builder: (context, activityBase, currentDayModel, child) {
                             Color color = Colors.grey;
 
-                            if (currentDay.hasActivityAtInterval(index)) {
-                              var activityIndex =
-                                  currentDay.intervals[index] ?? 0;
-                              color =
-                                  activityBase.activities[activityIndex].color;
+                            if (currentDayModel.hasActivityAtInterval(index)) {
+                              var activityKey =
+                                  currentDayModel.intervals[index];
+                              color = activityBase.activities[activityKey]?.color ?? Colors.grey;
                             }
 
                             return SelectableItem(

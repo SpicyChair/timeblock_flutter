@@ -8,9 +8,14 @@ import '../model/saved_activity.dart';
 import 'activity_tile.dart';
 
 class SlidingPanel extends StatefulWidget {
-  const SlidingPanel({Key? key, required this.selectedIndexes}) : super(key: key);
+  const SlidingPanel(
+      {Key? key,
+      required this.selectedIndexes,
+      required this.setActivityToSelectedIndexes})
+      : super(key: key);
 
   final Function selectedIndexes;
+  final Function setActivityToSelectedIndexes;
 
   @override
   State<SlidingPanel> createState() => _SlidingPanelState();
@@ -25,7 +30,18 @@ class _SlidingPanelState extends State<SlidingPanel> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          createSlideUpIndicator(),
+          Center(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(24.0),
+                ),
+              ),
+              height: 5,
+              width: 50,
+            ),
+          ),
           const SizedBox(
             height: 30,
           ),
@@ -36,23 +52,6 @@ class _SlidingPanelState extends State<SlidingPanel> {
           ),
           createActivityPanelActionButtons(),
         ],
-      ),
-    );
-
-
-  }
-
-  Widget createSlideUpIndicator() {
-    return Center(
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.grey[300],
-          borderRadius: const BorderRadius.all(
-            Radius.circular(24.0),
-          ),
-        ),
-        height: 5,
-        width: 50,
       ),
     );
   }
@@ -89,34 +88,36 @@ class _SlidingPanelState extends State<SlidingPanel> {
           controller: controller,
           child: itemCount == 0
               ? const Center(
-            child: Text(
-              "Add a new activity below!",
-              style: TextStyle(color: Colors.grey),
-            ),
-          )
+                  child: Text(
+                    "Add a new activity below!",
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                )
               : GridView.builder(
-            itemCount: itemCount,
-            itemBuilder: (context, index) {
-              return Consumer<ActivityBase>(
-                builder: (context, activityBase, child) {
-                  SavedActivity activity = activityBase.activities[index];
-                  return ActivityTile(
-                    title: activity.name,
-                    icon: "",
-                    color: activity.color,
-                  );
-                },
-              );
-            },
-            controller: controller,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              // 1 item to represent the time on each row, 6 SelectableItems
-              crossAxisCount: 2,
-              crossAxisSpacing: 7.0,
-              mainAxisSpacing: 7.0,
-              childAspectRatio: 2.5,
-            ),
-          ),
+                  itemCount: itemCount,
+                  itemBuilder: (context, index) {
+                    return Consumer<ActivityBase>(
+                      builder: (context, activityBase, child) {
+                        SavedActivity activity =
+                            activityBase.activities.values.toList()[index];
+                        return ActivityTile(
+                          title: activity.name,
+                          icon: "",
+                          color: activity.color,
+                          onTap: widget.setActivityToSelectedIndexes,
+                        );
+                      },
+                    );
+                  },
+                  controller: controller,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    // 1 item to represent the time on each row, 6 SelectableItems
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 7.0,
+                    mainAxisSpacing: 7.0,
+                    childAspectRatio: 2.5,
+                  ),
+                ),
         ),
       ),
     );
@@ -142,9 +143,11 @@ class _SlidingPanelState extends State<SlidingPanel> {
           Expanded(
             child: ElevatedButton(
               onPressed: () async {
-                await showDialog(context: context, builder: (context) {
-                  return const NewActivityDialog();
-                });
+                await showDialog(
+                    context: context,
+                    builder: (context) {
+                      return const NewActivityDialog();
+                    });
                 setState(() {});
               },
               child: const Text("New Activity"),

@@ -2,14 +2,14 @@ import 'package:grid_planner_test/model/time_interval.dart';
 import 'package:flutter/material.dart';
 
 class CurrentDayModel extends ChangeNotifier {
-  var intervals = <int, int>{};
+  var intervals = <int, String>{};
 
-  void setActivityAtInterval(index, activityKey) {
+  void setActivityAtInterval(int index, String activityKey) {
     intervals[index] = activityKey;
     notifyListeners();
   }
 
-  void removeActivityAtInterval(index) {
+  void removeActivityAtInterval(int index) {
     if (hasActivityAtInterval(index)) {
       intervals.remove(index);
       notifyListeners();
@@ -17,8 +17,8 @@ class CurrentDayModel extends ChangeNotifier {
 
   }
 
-  int? getActivityAtInterval(index) => hasActivityAtInterval(index) ? intervals[index] : null;
+  String? getActivityKeyAtInterval(int index) => hasActivityAtInterval(index) ? intervals[index] : null;
 
 
-  bool hasActivityAtInterval(index) => intervals.containsKey(index);
+  bool hasActivityAtInterval(int index) => intervals.containsKey(index);
 }
