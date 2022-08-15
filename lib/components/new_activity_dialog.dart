@@ -13,7 +13,6 @@ class NewActivityDialog extends StatefulWidget {
 }
 
 class _NewActivityDialogState extends State<NewActivityDialog> {
-
   Color pickerColor = Colors.blueAccent;
   Color currentColor = Colors.blueAccent;
   String emojiIcon = "";
@@ -118,6 +117,9 @@ class _NewActivityDialogState extends State<NewActivityDialog> {
           ),
         ),
         actions: <Widget>[
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text("Cancel")),
           ElevatedButton(
             child: const Text('Select'),
             onPressed: () {
@@ -125,9 +127,6 @@ class _NewActivityDialogState extends State<NewActivityDialog> {
               Navigator.of(context).pop();
             },
           ),
-          TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text("Cancel"))
         ],
       ),
     );

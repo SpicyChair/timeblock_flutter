@@ -7,8 +7,8 @@ class ActivityBase extends ChangeNotifier {
   int getSize() => activities.length;
 
   void createNewActivity(String name, Color color) {
-
-    activities.putIfAbsent(name, () => SavedActivity(name: "name${getColorAsString(color)}", color: color));
+    String key = "$name${getColorAsString(color)}";
+    activities.putIfAbsent(key, () => SavedActivity(name: name, key: key, color: color));
   }
 
   String getColorAsString(Color color) {

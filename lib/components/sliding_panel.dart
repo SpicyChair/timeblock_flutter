@@ -101,9 +101,7 @@ class _SlidingPanelState extends State<SlidingPanel> {
                         SavedActivity activity =
                             activityBase.activities.values.toList()[index];
                         return ActivityTile(
-                          title: activity.name,
-                          icon: "",
-                          color: activity.color,
+                          activity: activity,
                           onTap: widget.setActivityToSelectedIndexes,
                         );
                       },
