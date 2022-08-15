@@ -82,11 +82,11 @@ class _SelectableItemState extends State<SelectableItem>
         },
         child: Container(
           alignment: Alignment.center,
-          child: Text(
+          child: const Text(
             "",//'${widget.index}',
 
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
           ),
         ),
       ),

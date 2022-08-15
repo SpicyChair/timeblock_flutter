@@ -14,10 +14,12 @@ class GridPlannerControllerProvider extends ChangeNotifier {
   void clear() => controller.clear();
 
   void setActivityToSelectedIntervals(String activityKey, BuildContext context) {
+    if (selectedIndexes().isEmpty) {
+      return;
+    }
+
     var currentDayProvider =
     Provider.of<CurrentDayModel>(context, listen: false);
-    //print("called setActivity with index $activityKey");
-    //print(gridviewController.value.selectedIndexes);
 
     for (var selected in selectedIndexes()) {
       currentDayProvider.setActivityAtInterval(selected, activityKey);
@@ -27,6 +29,11 @@ class GridPlannerControllerProvider extends ChangeNotifier {
   }
 
   void removeActivityFromSelectedIntervals(BuildContext context) {
+
+    if (selectedIndexes().isEmpty) {
+      return;
+    }
+
     var currentDayProvider =
     Provider.of<CurrentDayModel>(context, listen: false);
 
