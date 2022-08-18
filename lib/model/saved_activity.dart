@@ -6,7 +6,14 @@ part 'saved_activity.g.dart';
 @HiveType(typeId: 1)
 class SavedActivity {
 
-  SavedActivity({required this.name, required this.key, required this.color});
+  SavedActivity({required this.name, required this.key,  required this.colorAsString});
+
+
+  Color getColor() {
+    return Color(int.parse(colorAsString));
+  }
+
+
   @HiveField(0)
   String name;
 
@@ -14,6 +21,9 @@ class SavedActivity {
   String key;
 
   @HiveField(2)
-  Color color;
+  String colorAsString;
+
+
+
 
 }

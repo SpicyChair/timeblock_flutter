@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grid_planner_test/components/new_activity_dialog.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
 import '../constants.dart';
@@ -24,6 +25,10 @@ class SlidingPanel extends StatefulWidget {
 class _SlidingPanelState extends State<SlidingPanel> {
   @override
   Widget build(BuildContext context) {
+
+
+    var activityBox = Hive.box('activities');
+    
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
       child: Column(

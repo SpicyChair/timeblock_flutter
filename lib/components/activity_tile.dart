@@ -13,7 +13,7 @@ class ActivityTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-        color: activity.color.withOpacity(0.15),
+        color: activity.getColor().withOpacity(0.15),
         borderRadius: BorderRadius.circular(15),
         child: InkWell(
           borderRadius: BorderRadius.circular(15),
@@ -24,7 +24,7 @@ class ActivityTile extends StatelessWidget {
             child: ListTile(
               leading: Container(
                 decoration: BoxDecoration(
-                  color: activity.color,
+                  color: activity.getColor(),
                   borderRadius: BorderRadius.circular(100), //circle
                 ),
                 height: 25,

@@ -153,7 +153,7 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
                             if (currentDayModel.hasActivityAtInterval(index)) {
                               var activityKey =
                                   currentDayModel.intervals[index];
-                              color = activityBase.activities[activityKey]?.color ?? Colors.grey;
+                              color = activityBase.activities[activityKey]?.getColor() ?? Colors.grey;
                             }
 
                             return SelectableItem(

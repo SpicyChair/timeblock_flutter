@@ -19,7 +19,7 @@ class SavedActivityAdapter extends TypeAdapter<SavedActivity> {
     return SavedActivity(
       name: fields[0] as String,
       key: fields[1] as String,
-      color: fields[2] as Color,
+      colorAsString: fields[2] as String,
     );
   }
 
@@ -32,7 +32,7 @@ class SavedActivityAdapter extends TypeAdapter<SavedActivity> {
       ..writeByte(1)
       ..write(obj.key)
       ..writeByte(2)
-      ..write(obj.color);
+      ..write(obj.colorAsString);
   }
 
   @override
