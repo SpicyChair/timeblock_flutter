@@ -3,6 +3,7 @@ import 'package:grid_planner_test/model/current_day_model.dart';
 import 'package:grid_planner_test/model/gridview_controller.dart';
 import 'package:grid_planner_test/model/saved_activity.dart';
 import 'package:grid_planner_test/screens/grid_planner_screen.dart';
+import 'package:grid_planner_test/screens/loading_screen.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 import 'model/activity_base.dart';
@@ -10,8 +11,9 @@ import 'model/activity_base.dart';
 void main() async {
   //initialise Hive persistence
   await Hive.initFlutter();
-  await Hive.openBox<SavedActivity>('activities');
   Hive.registerAdapter(SavedActivityAdapter());
+  await Hive.openBox<SavedActivity>('activities');
+
 
 
   runApp(MultiProvider(
@@ -38,7 +40,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(useMaterial3: true),
-      home: const GridPlannerScreen(),
+      home: const LoadingScreen(),
     );
   }
 }

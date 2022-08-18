@@ -15,14 +15,7 @@ class ActivityBase extends ChangeNotifier {
 
     activities.putIfAbsent(key, () => newActivity);
     box.put(key, newActivity);
-  }
-
-  void loadActivitiesFromBox()  {
-    for (int i = 0; i < box.length; i++) {
-      var activity = box.getAt(i);
-      activities[activity?.key ?? ''] = activity ?? SavedActivity(key: '', name: '', colorAsString: '');
-    }
-    notifyListeners();
+    print("put");
   }
 
   String keyGenerator() {
@@ -33,6 +26,14 @@ class ActivityBase extends ChangeNotifier {
   String getColorAsString(Color color) {
     return color.value.toString();
   }
+
+  void loadActivitiesFromBox() {
+    print("called load activities");
+    for (var activity in box.values) {activities[activity.key] = activity; print(activity.name);}
+    //notifyListeners();
+  }
+
+
 
 
 }

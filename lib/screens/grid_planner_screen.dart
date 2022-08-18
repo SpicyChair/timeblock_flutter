@@ -9,6 +9,7 @@ import 'package:grid_planner_test/model/activity_base.dart';
 import 'package:grid_planner_test/model/current_day_model.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:hive/hive.dart';
 
 
 import '../constants.dart';
