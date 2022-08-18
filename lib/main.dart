@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:grid_planner_test/model/current_day_model.dart';
 import 'package:grid_planner_test/model/gridview_controller.dart';
 import 'package:grid_planner_test/screens/grid_planner_screen.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 import 'model/activity_base.dart';
@@ -10,6 +9,8 @@ import 'model/activity_base.dart';
 void main() async {
   //initialise Hive persistence
   await Hive.initFlutter();
+  await Hive.openBox('activities');
+  //await Hive.openBox('testBox');
 
   runApp(MultiProvider(
     providers: [

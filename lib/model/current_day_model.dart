@@ -1,4 +1,3 @@
-import 'package:grid_planner_test/model/time_interval.dart';
 import 'package:flutter/material.dart';
 
 class CurrentDayModel extends ChangeNotifier {
