@@ -9,6 +9,11 @@ class SavedDay {
 
   @HiveField(0)
   var intervals = <int, String>{};
+  
+  @HiveField(1)
+  String key;
+
+  SavedDay({required this.key});
 
   void removeInterval(int interval) {
     intervals.remove(interval);
@@ -16,6 +21,14 @@ class SavedDay {
 
   void addInterval(int interval, String key) {
     intervals[interval] = key;
+  }
+
+  bool containsActivityAt(int interval) {
+    return intervals.containsKey(interval);
+  }
+
+  String getActivityAt(int interval) {
+    return intervals[interval] ?? '';
   }
 
 
