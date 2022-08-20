@@ -9,7 +9,7 @@ class SavedDay {
 
   @HiveField(0)
   var intervals = <int, String>{};
-  
+
   @HiveField(1)
   String key;
 

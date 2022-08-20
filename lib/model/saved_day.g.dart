@@ -16,15 +16,19 @@ class SavedDayAdapter extends TypeAdapter<SavedDay> {
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return SavedDay()..intervals = (fields[0] as Map).cast<int, String>();
+    return SavedDay(
+      key: fields[1] as String,
+    )..intervals = (fields[0] as Map).cast<int, String>();
   }
 
   @override
   void write(BinaryWriter writer, SavedDay obj) {
     writer
-      ..writeByte(1)
+      ..writeByte(2)
       ..writeByte(0)
-      ..write(obj.intervals);
+      ..write(obj.intervals)
+      ..writeByte(1)
+      ..write(obj.key);
   }
 
   @override

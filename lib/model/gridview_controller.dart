@@ -28,7 +28,7 @@ class GridPlannerControllerProvider extends ChangeNotifier {
     controller.clear();
   }
 
-  void removeActivityFromSelectedIntervals(BuildContext context) {
+  Future<void> removeActivityFromSelectedIntervals(BuildContext context) async {
 
     if (selectedIndexes().isEmpty) {
       return;
@@ -38,7 +38,7 @@ class GridPlannerControllerProvider extends ChangeNotifier {
     Provider.of<CurrentDayModel>(context, listen: false);
 
     for (var selected in selectedIndexes()) {
-      currentDayProvider.removeActivityAtInterval(selected);
+      await currentDayProvider.removeActivityAtInterval(selected);
     }
     controller.clear();
   }

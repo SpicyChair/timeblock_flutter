@@ -4,19 +4,28 @@ import 'package:hive/hive.dart';
 
 class CurrentDayModel extends ChangeNotifier {
 
-  late SavedDay currentSavedDay;
-  DateTime currentDate = DateTime.now();
+  late SavedDay currentSavedDay = SavedDay(key: '');
+
 
   var box = Hive.box<SavedDay>('saved_days');
 
-  void setActivityAtInterval(int interval, String key) {
+  Future<void> setActivityAtInterval(int interval, String key) async {
+
+    //cache it
     currentSavedDay.addInterval(interval, key);
 
+
+    //persist it
+    final dayKey = currentSavedDay.key;
+    await box.put(dayKey, currentSavedDay);
   }
 
-  void removeActivityAtInterval(int interval) {
+  Future<void> removeActivityAtInterval(int interval) async {
     currentSavedDay.removeInterval(interval);
 
+    //persist it
+    final dayKey = currentSavedDay.key;
+    await box.put(dayKey, currentSavedDay);
   }
 
   Future<void> loadCurrentDayFromBox() async {
