@@ -10,7 +10,7 @@ import 'package:grid_planner_test/model/current_day_model.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:hive/hive.dart';
-
+import 'package:weekly_date_picker/weekly_date_picker.dart';
 
 import '../constants.dart';
 import '../model/gridview_controller.dart';
@@ -27,9 +27,7 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
   var gridviewController = DragSelectGridViewController();
 
   //get the selected indexes of the gridview
-  Set<int> selectedIndexes() =>
-
-      gridviewController.value.selectedIndexes;
+  Set<int> selectedIndexes() => gridviewController.value.selectedIndexes;
 
   @override
   void initState() {
@@ -91,9 +89,17 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
         body: ListView(
           //physics: const BouncingScrollPhysics(),
           children: [
+            WeeklyDatePicker(
+              selectedDay: DateTime.now(),
+              changeDay: (DateTime newDate) {},
+              backgroundColor: Theme.of(context).canvasColor,
+              weekdayTextColor: Theme.of(context).textTheme.titleMedium!.color!,
+                digitsColor: Theme.of(context).textTheme.titleMedium!.color!,
+              selectedBackgroundColor: Colors.blueAccent,
+              enableWeeknumberText: false,
+            ),
             Padding(
-              padding:
-                  const EdgeInsets.fromLTRB(10, 10, 10, 10),
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
               child: Row(
                 children: [
                   Flexible(
@@ -149,23 +155,25 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
                         }
 
                         return Consumer2<ActivityBase, CurrentDayModel>(
-                          builder: (context, activityBase, currentDayModel, child) {
+                          builder:
+                              (context, activityBase, currentDayModel, child) {
                             Color color = Colors.grey;
-
 
                             //if the interval contains an activity
                             if (currentDayModel.hasActivityAtInterval(index)) {
                               //get the activity key
-                              var key = currentDayModel.getActivityKeyAtInterval(index);
+                              var key = currentDayModel
+                                  .getActivityKeyAtInterval(index);
 
                               //check if activity exists
                               if (!activityBase.activityExists(key)) {
                                 //if not, remove it from the current day
                                 //used if user deletes a previously set activity
                                 currentDayModel.removeActivityAtInterval(index);
+                              } else {
+                                color =
+                                    activityBase.getActivity(key).getColor();
                               }
-
-                              color = activityBase.getActivity(key).getColor();
                             }
 
                             return SelectableItem(

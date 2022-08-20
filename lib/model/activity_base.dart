@@ -27,7 +27,7 @@ class ActivityBase extends ChangeNotifier {
     //persist
     await box.put(key, newActivity);
 
-    //notifyListeners();
+    notifyListeners();
   }
 
   void deleteActivity(String key) async {

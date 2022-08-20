@@ -33,6 +33,9 @@ class _SlidingPanelState extends State<SlidingPanel> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(
+            height: 3,
+          ),
           Center(
             child: Container(
               decoration: BoxDecoration(
@@ -46,7 +49,7 @@ class _SlidingPanelState extends State<SlidingPanel> {
             ),
           ),
           const SizedBox(
-            height: 30,
+            height: 17,
           ),
           createSelectedTitle(),
           createSelectActivityPanel(),
@@ -61,13 +64,11 @@ class _SlidingPanelState extends State<SlidingPanel> {
 
   Widget createSelectedTitle() {
     if (widget.selectedIndexes().isEmpty) {
-      return const Text("Current Activity: ");
+      return Text("Current Activity: ", style: Theme.of(context).textTheme.titleMedium,);
     }
     return RichText(
       text: TextSpan(
-        style: const TextStyle(
-          fontSize: 15.0,
-        ),
+        style: Theme.of(context).textTheme.titleMedium,
         children: <TextSpan>[
           const TextSpan(text: 'Selected: '),
           TextSpan(
@@ -85,7 +86,7 @@ class _SlidingPanelState extends State<SlidingPanel> {
       borderRadius: kMediumBorderRadius,
       child: SizedBox(
         width: double.maxFinite,
-        height: 275,
+        height: 270,
         child: Scrollbar(
           controller: controller,
           child: itemCount == 0

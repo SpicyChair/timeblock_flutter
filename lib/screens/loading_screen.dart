@@ -19,12 +19,17 @@ class _LoadingScreenState extends State<LoadingScreen> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+
+      //load data from the hive box into activitybase
       Provider.of<ActivityBase>(context, listen: false).loadActivitiesFromBox();
 
+
+      //then push to homescreen
       Navigator.pushReplacement(
         context,
         PageTransition(
           type: PageTransitionType.fade,
+          duration: const Duration(seconds: 1),
           child: const GridPlannerScreen(),
           //duration: const Duration(seconds: 1),
         ),

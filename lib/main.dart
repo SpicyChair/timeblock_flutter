@@ -12,7 +12,9 @@ void main() async {
   //initialise Hive persistence
   await Hive.initFlutter();
   Hive.registerAdapter(SavedActivityAdapter());
+  Hive.registerAdapter(SavedDayAdapter());
   await Hive.openBox<SavedActivity>('activities');
+  await Hive.openBox<Map<int, String>>("saved_days");
 
   runApp(
     MultiProvider(
