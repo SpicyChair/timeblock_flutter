@@ -25,6 +25,7 @@ class GridPlannerScreen extends StatefulWidget {
 
 class _GridPlannerScreenState extends State<GridPlannerScreen> {
   var gridviewController = DragSelectGridViewController();
+  final panelController = PanelController();
 
   //get the selected indexes of the gridview
   Set<int> selectedIndexes() => gridviewController.value.selectedIndexes;
@@ -78,7 +79,6 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     panelHeightOpen = MediaQuery.of(context).size.height * .55;
 
     return Scaffold(
@@ -86,6 +86,7 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
         alignment: Alignment.topCenter,
         children: [
           SlidingUpPanel(
+            controller: panelController,
             color: Theme.of(context).bottomAppBarColor,
             maxHeight: panelHeightOpen,
             minHeight: panelHeightClosed,
@@ -98,14 +99,46 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
               topRight: Radius.circular(24.0),
             ),
             body: buildGridView(),
-
+            header: SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: 30,
+              child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () {
+                  if (panelController.isPanelClosed) {
+                    //open the panel if closed
+                    panelController.animatePanelToPosition(1.0);
+                  } else {
+                    //close the panel if open
+                    panelController.animatePanelToPosition(0.0);
+                  }
+                },
+                child: SizedBox(
+                  height: 30,
+                  width: 70,
+                  child: Center(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(24.0),
+                        ),
+                      ),
+                      height: 6,
+                      width: 70,
+                    ),
+                  ),
+                ),
+              ),
+            ),
             onPanelSlide: (double newPos) => setState(() {
               //update the FAB height as panel slides
               FABHeight = newPos * (panelHeightOpen - panelHeightClosed) +
                   initFABHeight;
             }),
           ),
-          widget(
+          Visibility(
+            visible: selectedIndexes().isNotEmpty,
             child: Positioned(
               right: 12.0,
               bottom: FABHeight,
@@ -114,7 +147,12 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
                   removeActivityFromSelectedIntervals();
                 },
                 backgroundColor: Colors.redAccent,
-                label: const Text("Clear", style: TextStyle(color: Colors.white,),),
+                label: const Text(
+                  "Clear",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
                 icon: const Icon(
                   Icons.clear,
                   color: Colors.white,

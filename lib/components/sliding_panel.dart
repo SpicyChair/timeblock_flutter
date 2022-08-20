@@ -34,22 +34,7 @@ class _SlidingPanelState extends State<SlidingPanel> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(
-            height: 3,
-          ),
-          Center(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(24.0),
-                ),
-              ),
-              height: 5,
-              width: 50,
-            ),
-          ),
-          const SizedBox(
-            height: 17,
+            height: 25,
           ),
           createSelectedTitle(),
           createSelectActivityPanel(),

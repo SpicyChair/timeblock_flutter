@@ -22,8 +22,6 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => CurrentDayModel()),
         ChangeNotifierProvider(create: (context) => ActivityBase()),
-        ChangeNotifierProvider(
-            create: (context) => GridPlannerControllerProvider()),
       ],
       child: const MyApp(),
     ),
