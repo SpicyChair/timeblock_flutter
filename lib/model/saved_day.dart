@@ -9,4 +9,14 @@ class SavedDay {
 
   @HiveField(0)
   var intervals = <int, String>{};
+
+  void removeInterval(int interval) {
+    intervals.remove(interval);
+  }
+
+  void addInterval(int interval, String key) {
+    intervals[interval] = key;
+  }
+
+
 }

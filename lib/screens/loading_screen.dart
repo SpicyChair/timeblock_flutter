@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:grid_planner_test/model/current_day_model.dart';
 import 'package:grid_planner_test/screens/grid_planner_screen.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -20,8 +21,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
 
-      //load data from the hive box into activitybase
+      //load data from the hive box into activitybase and currentdaymodel
       Provider.of<ActivityBase>(context, listen: false).loadActivitiesFromBox();
+
+      Provider.of<CurrentDayModel>(context, listen: false).loadCurrentDayFromBox();
 
 
       //then push to homescreen
