@@ -14,21 +14,21 @@ void main() async {
   Hive.registerAdapter(SavedActivityAdapter());
   await Hive.openBox<SavedActivity>('activities');
 
-
-
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(create: (context) => CurrentDayModel()),
-      ChangeNotifierProvider(create: (context) => ActivityBase()),
-      ChangeNotifierProvider(create: (context) => GridPlannerControllerProvider()),
-    ],
-    child: const MyApp(),
-  ),);
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => CurrentDayModel()),
+        ChangeNotifierProvider(create: (context) => ActivityBase()),
+        ChangeNotifierProvider(
+            create: (context) => GridPlannerControllerProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-
 
   // This widget is the root of your application.
   @override
@@ -37,9 +37,14 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       darkTheme: ThemeData(
         brightness: Brightness.dark,
+        useMaterial3: true, colorScheme: ColorScheme.fromSwatch(brightness: Brightness.dark).copyWith(secondary: Colors.blueAccent),
+      ),
+      theme: ThemeData(
+        brightness: Brightness.light,
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSwatch(brightness: Brightness.light).copyWith(secondary: Colors.blueAccent),
       ),
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(useMaterial3: true),
       home: const LoadingScreen(),
     );
   }

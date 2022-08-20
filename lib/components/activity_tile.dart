@@ -3,12 +3,13 @@ import 'package:grid_planner_test/model/saved_activity.dart';
 
 class ActivityTile extends StatelessWidget {
   const ActivityTile(
-      {Key? key, required this.activity, required this.onTap,})
+      {Key? key, required this.activity, required this.onTap, required this.onLongPress,})
       : super(key: key);
 
 
   final SavedActivity activity;
   final Function onTap;
+  final Function onLongPress;
 
   @override
   Widget build(BuildContext context) {
@@ -17,9 +18,10 @@ class ActivityTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
         child: InkWell(
           borderRadius: BorderRadius.circular(15),
-        onTap: () {},
-        child: GestureDetector(
-          onTap: () => onTap(activity.key),
+        onTap: () async => onTap(activity.key),
+        onLongPress: () async => onLongPress(activity.key),
+        child: IgnorePointer(
+          ignoring: true,
           child: Center(
             child: ListTile(
               leading: Container(

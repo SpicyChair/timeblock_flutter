@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CurrentDayModel extends ChangeNotifier {
+
+
   var intervals = <int, String>{};
 
   void setActivityAtInterval(int index, String activityKey) {
@@ -16,7 +18,7 @@ class CurrentDayModel extends ChangeNotifier {
 
   }
 
-  String? getActivityKeyAtInterval(int index) => hasActivityAtInterval(index) ? intervals[index] : null;
+  String getActivityKeyAtInterval(int index) => intervals[index] ?? '';
 
 
   bool hasActivityAtInterval(int index) => intervals.containsKey(index);

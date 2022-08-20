@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+//import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
-
+import 'package:flex_color_picker/flex_color_picker.dart';
 import '../constants.dart';
 import '../model/activity_base.dart';
+import '';
 
 class NewActivityDialog extends StatefulWidget {
   const NewActivityDialog({Key? key}) : super(key: key);
@@ -14,7 +15,6 @@ class NewActivityDialog extends StatefulWidget {
 
 class _NewActivityDialogState extends State<NewActivityDialog> {
   Color pickerColor = Colors.blueAccent;
-  Color currentColor = Colors.blueAccent;
   String emojiIcon = "";
   String newActivityName = "";
 
@@ -29,12 +29,13 @@ class _NewActivityDialogState extends State<NewActivityDialog> {
         ),
         title: const Text('New Activity'),
         content: SizedBox(
-          height: 250,
+          height: 140,
           width: double.maxFinite,
           child: ListView(
             shrinkWrap: true,
             physics: const ClampingScrollPhysics(),
             children: [
+              /*
               ListTile(
                 shape: RoundedRectangleBorder(
                   borderRadius: kMediumBorderRadius,
@@ -48,14 +49,16 @@ class _NewActivityDialogState extends State<NewActivityDialog> {
               const SizedBox(
                 height: 5,
               ),
+
+               */
               ListTile(
                 shape: RoundedRectangleBorder(
                   borderRadius: kMediumBorderRadius,
                 ),
-                tileColor: currentColor,
+                tileColor: pickerColor,
                 title: const Center(child: Text("Change Color")),
                 onTap: () async {
-                  await showColorPickerDialog();
+                  await colorPickerDialog();
                   setState(() {});
                 },
               ),
@@ -85,7 +88,7 @@ class _NewActivityDialogState extends State<NewActivityDialog> {
           ElevatedButton(
             onPressed: () {
               Provider.of<ActivityBase>(context, listen: false)
-                  .createNewActivity(newActivityName, currentColor);
+                  .createNewActivity(newActivityName, pickerColor);
 
               Navigator.of(context).pop();
             },
@@ -96,39 +99,51 @@ class _NewActivityDialogState extends State<NewActivityDialog> {
     });
   }
 
-  Future<void> showColorPickerDialog() async {
-    await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(15),
-          ),
-        ),
-        content: SingleChildScrollView(
-          child: MaterialPicker(
-            pickerColor: pickerColor,
-            onColorChanged: (Color color) {
-              setState(() {
-                pickerColor = color;
-                currentColor = color;
-              });
-            },
-          ),
-        ),
-        actions: <Widget>[
-          TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text("Cancel")),
-          ElevatedButton(
-            child: const Text('Select'),
-            onPressed: () {
-              setState(() => currentColor = pickerColor);
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
+  Future<bool> colorPickerDialog() async {
+    return ColorPicker(
+      // Use the dialogPickerColor as start color.
+      color: pickerColor,
+      // Update the dialogPickerColor using the callback.
+      onColorChanged: (Color color) =>
+          setState(() => pickerColor = color),
+      width: 40,
+      height: 40,
+      borderRadius: 4,
+      spacing: 5,
+      runSpacing: 5,
+      wheelDiameter: 155,
+      heading: Text(
+        'Select color',
+        style: Theme.of(context).textTheme.subtitle1,
       ),
+      subheading: Text(
+        'Select color shade',
+        style: Theme.of(context).textTheme.subtitle1,
+      ),
+      wheelSubheading: Text(
+        'Select color shade',
+        style: Theme.of(context).textTheme.subtitle1,
+      ),
+      showColorCode: true,
+      copyPasteBehavior: const ColorPickerCopyPasteBehavior(
+        longPressMenu: true,
+      ),
+      materialNameTextStyle: Theme.of(context).textTheme.caption,
+      colorNameTextStyle: Theme.of(context).textTheme.caption,
+      colorCodeTextStyle: Theme.of(context).textTheme.caption,
+      pickersEnabled: const <ColorPickerType, bool>{
+        ColorPickerType.both: false,
+        ColorPickerType.primary: true,
+        ColorPickerType.accent: false,
+        ColorPickerType.bw: false,
+        ColorPickerType.custom: false,
+        ColorPickerType.wheel: true,
+      },
+    ).showPickerDialog(
+      context,
+      constraints:
+      const BoxConstraints(minHeight: 460, minWidth: 300, maxWidth: 320),
     );
   }
+
 }

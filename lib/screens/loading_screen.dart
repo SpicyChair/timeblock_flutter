@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:grid_planner_test/screens/grid_planner_screen.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 import '../model/activity_base.dart';
@@ -13,36 +14,28 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
-
   @override
   void initState() {
-
     super.initState();
-    loadBoxes();
 
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const GridPlannerScreen(),
-      ),
-    );
-  }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ActivityBase>(context, listen: false).loadActivitiesFromBox();
 
-
-
-
-
-  void loadBoxes() {
-    Provider.of<ActivityBase>(context, listen: false).loadActivitiesFromBox();
+      Navigator.pushReplacement(
+        context,
+        PageTransition(
+          type: PageTransitionType.fade,
+          child: const GridPlannerScreen(),
+          //duration: const Duration(seconds: 1),
+        ),
+      );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Theme.of(context).brightness == Brightness.dark
-          ? Colors.black
-          : Colors.grey[200],
       body: Stack(
         alignment: Alignment.center,
         children: [
@@ -51,22 +44,15 @@ class _LoadingScreenState extends State<LoadingScreen> {
             child: Container(
               height: 120,
               width: 120,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("assets/pluvia_circle_icon.png"),
-                  fit: BoxFit.fill,
-                ),
-              ),
             ),
           ),
-          Positioned(
+          const Positioned(
             bottom: 273,
             child: Text(
               "PLANNER",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Theme.of(context).primaryColorLight,
                 fontSize: 23,
               ),
             ),
@@ -76,27 +62,26 @@ class _LoadingScreenState extends State<LoadingScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
+              children: const [
                 //show message depending on status
                 Text(
                   "Loading...",
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
-                    color: Theme.of(context).primaryColorDark,
                   ),
                 ),
-                const SizedBox(
+                SizedBox(
                   height: 10,
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(8.0),
                   child: SpinKitThreeBounce(
                     size: 27,
-                    color: Theme.of(context).primaryColorDark,
+                    color: Colors.grey,
                   ),
                 ),
-                const SizedBox(
+                SizedBox(
                   height: 30,
                 )
               ],

@@ -78,6 +78,7 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SlidingUpPanel(
+        color: Theme.of(context).bottomAppBarColor,
         maxHeight: 420,
         panel: SlidingPanel(
           selectedIndexes: selectedIndexes,
@@ -128,7 +129,7 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
                       itemCount: 144,
                       itemBuilder: (context, index, selected) {
                         //border radius of corners
-                        Radius corner = const Radius.circular(10);
+                        Radius corner = const Radius.circular(15);
                         //default border radius
                         BorderRadius radius = BorderRadius.zero;
                         //round the corners of the 4 items in the corners
@@ -151,10 +152,20 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
                           builder: (context, activityBase, currentDayModel, child) {
                             Color color = Colors.grey;
 
+
+                            //if the interval contains an activity
                             if (currentDayModel.hasActivityAtInterval(index)) {
-                              var activityKey =
-                                  currentDayModel.intervals[index];
-                              color = activityBase.activities[activityKey]?.getColor() ?? Colors.grey;
+                              //get the activity key
+                              var key = currentDayModel.getActivityKeyAtInterval(index);
+
+                              //check if activity exists
+                              if (!activityBase.activityExists(key)) {
+                                //if not, remove it from the current day
+                                //used if user deletes a previously set activity
+                                currentDayModel.removeActivityAtInterval(index);
+                              }
+
+                              color = activityBase.getActivity(key).getColor();
                             }
 
                             return SelectableItem(

@@ -205,6 +205,13 @@
             </list>
           </value>
         </entry>
+        <entry key="flex_color_picker">
+          <value>
+            <list>
+              <option value="C:/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/flex_color_picker-2.5.0/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="flutter">
           <value>
             <list>
@@ -377,6 +384,13 @@
           <value>
             <list>
               <option value="C:/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/package_config-2.1.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="page_transition">
+          <value>
+            <list>
+              <option value="C:/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/page_transition-2.0.9/lib" />
             </list>
           </value>
         </entry>
@@ -720,6 +734,7 @@
       <root url="file://C:/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/ffi-2.0.1/lib" />
       <root url="file://C:/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/file-6.1.2/lib" />
       <root url="file://C:/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/fixnum-1.0.1/lib" />
+      <root url="file://C:/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/flex_color_picker-2.5.0/lib" />
       <root url="file://C:/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_colorpicker-1.0.3/lib" />
       <root url="file://C:/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_lints-2.0.1/lib" />
       <root url="file://C:/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_spinkit-5.1.0/lib" />
@@ -742,6 +757,7 @@
       <root url="file://C:/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/mime-1.0.2/lib" />
       <root url="file://C:/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/nested-1.0.0/lib" />
       <root url="file://C:/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/package_config-2.1.0/lib" />
+      <root url="file://C:/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/page_transition-2.0.9/lib" />
       <root url="file://C:/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/path-1.8.1/lib" />
       <root url="file://C:/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider-2.0.11/lib" />
       <root url="file://C:/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_android-2.0.19/lib" />

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:grid_planner_test/components/new_activity_dialog.dart';
+import 'package:grid_planner_test/components/activity_and_color_dialogs.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
@@ -66,8 +66,7 @@ class _SlidingPanelState extends State<SlidingPanel> {
     return RichText(
       text: TextSpan(
         style: const TextStyle(
-          fontSize: 14.0,
-          color: Colors.black,
+          fontSize: 15.0,
         ),
         children: <TextSpan>[
           const TextSpan(text: 'Selected: '),
@@ -106,6 +105,7 @@ class _SlidingPanelState extends State<SlidingPanel> {
                         return ActivityTile(
                           activity: activity,
                           onTap: widget.setActivityToSelectedIndexes,
+                          onLongPress: activityBase.deleteActivity,
                         );
                       },
                     );
@@ -124,48 +124,7 @@ class _SlidingPanelState extends State<SlidingPanel> {
     );
   }
 
-  Widget createSelectActivityPanelHiveBox() {
-    int itemCount = Provider.of<ActivityBase>(context, listen: true).getSize();
-    ScrollController controller = ScrollController();
-    return ClipRRect(
-      borderRadius: kMediumBorderRadius,
-      child: SizedBox(
-        width: double.maxFinite,
-        height: 275,
-        child: ValueListenableBuilder<Box>(
-          valueListenable: Hive.box('activities').listenable(),
-          builder: (context, box, widget) {
-            if (box.isEmpty) {
-              return const Center(
-                child: Text("Add an activity below!"),
-              );
-            }
 
-            return Scrollbar(
-              child: GridView.builder(
-                itemCount: itemCount,
-                itemBuilder: (context, index) {
-                  SavedActivity activity = box.getAt(index);
-                  return ActivityTile(
-                    activity: activity,
-                    onTap: () {},
-                  );
-                },
-                controller: controller,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  // 1 item to represent the time on each row, 6 SelectableItems
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 7.0,
-                  mainAxisSpacing: 7.0,
-                  childAspectRatio: 2.5,
-                ),
-              ),
-            );
-          },
-        ),
-      ),
-    );
-  }
 
   Widget createActivityPanelActionButtons() {
     return SizedBox(
