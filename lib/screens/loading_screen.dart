@@ -31,7 +31,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       Navigator.pushReplacement(
         context,
         PageTransition(
-          type: PageTransitionType.fade,
+          type: PageTransitionType.leftToRight,
           duration: const Duration(seconds: 1),
           child: const GridPlannerScreen(),
           //duration: const Duration(seconds: 1),
