@@ -7,6 +7,7 @@ class CurrentDayModel extends ChangeNotifier {
   SavedDay currentSavedDay = SavedDay();
   DateTime currentDate = DateTime.now();
   var intervals = <int, String>{};
+  var box = Hive.box<SavedDay>('saved_days');
 
   void setActivityAtInterval(int index, String activityKey) {
     intervals[index] = activityKey;
@@ -17,6 +18,27 @@ class CurrentDayModel extends ChangeNotifier {
       intervals.remove(index);
     }
     //print(intervals.values.length);
+  }
+
+  Future<void> loadCurrentDayFromBox() async {
+    final key = generateKey(DateTime.now());
+    await loadDayFromBox(key);
+  }
+
+  String generateKey(DateTime date) {
+    //DDMMYYYY
+    return "${date.day}${date.month}${date.year}";
+  }
+
+  Future<void> loadDayFromBox(String key) async {
+    if (box.containsKey(key)) {
+      //get the saved day if it exists
+      currentSavedDay =  box.get(key)!;
+    } else {
+      //else create and save a new one
+      final newDay = SavedDay();
+      await box.put(key, newDay);
+    }
   }
 
 

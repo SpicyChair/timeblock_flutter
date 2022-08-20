@@ -7,6 +7,7 @@ import 'package:grid_planner_test/screens/loading_screen.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 import 'model/activity_base.dart';
+import 'model/saved_day.dart';
 
 void main() async {
   //initialise Hive persistence
@@ -14,7 +15,7 @@ void main() async {
   Hive.registerAdapter(SavedActivityAdapter());
   Hive.registerAdapter(SavedDayAdapter());
   await Hive.openBox<SavedActivity>('activities');
-  await Hive.openBox<Map<int, String>>("saved_days");
+  await Hive.openBox<SavedDay>("saved_days");
 
   runApp(
     MultiProvider(
