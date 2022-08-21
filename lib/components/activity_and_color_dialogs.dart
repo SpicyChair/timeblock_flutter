@@ -137,8 +137,9 @@ class _NewActivityDialogState extends State<NewActivityDialog> {
       },
     ).showPickerDialog(
       context,
+      shape: kDialogShape,
       constraints:
-      const BoxConstraints(minHeight: 460, minWidth: 300, maxWidth: 320),
+      const BoxConstraints(minHeight: 400, minWidth: 300, maxWidth: 320),
     );
   }
 

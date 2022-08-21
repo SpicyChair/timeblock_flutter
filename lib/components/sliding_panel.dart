@@ -26,7 +26,6 @@ class SlidingPanel extends StatefulWidget {
 class _SlidingPanelState extends State<SlidingPanel> {
   @override
   Widget build(BuildContext context) {
-
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
       child: Column(
@@ -52,7 +51,10 @@ class _SlidingPanelState extends State<SlidingPanel> {
 
   Widget createSelectedTitle() {
     if (widget.selectedIndexes().isEmpty) {
-      return Text("Current Activity: ", style: Theme.of(context).textTheme.titleMedium,);
+      return Text(
+        "Current Activity: ",
+        style: Theme.of(context).textTheme.titleMedium,
+      );
     }
     return RichText(
       text: TextSpan(
@@ -94,7 +96,7 @@ class _SlidingPanelState extends State<SlidingPanel> {
                         return ActivityTile(
                           activity: activity,
                           onTap: widget.setActivityToSelectedIndexes,
-                          onLongPress: activityBase.deleteActivity,
+                          onLongPress: showConfirmDeletionDialog,
                         );
                       },
                     );
@@ -112,8 +114,6 @@ class _SlidingPanelState extends State<SlidingPanel> {
       ),
     );
   }
-
-
 
   Widget createActivityPanelActionButtons() {
     return SizedBox(
@@ -150,9 +150,33 @@ class _SlidingPanelState extends State<SlidingPanel> {
     );
   }
 
-  Future<void> showConfirmDeletionDialog() async {
-    showDialog(context: context, builder: () => AlertDialog(
-
-    ))
+  Future<void> showConfirmDeletionDialog(String keyToDelete) async {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: kDialogShape,
+        title: const Text("Delete Activity?"),
+        content:
+            const Text("This will also delete any entries of this activity."),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text("Cancel"),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: Colors.redAccent,
+              onPrimary: Colors.white,
+            ),
+            onPressed: () async {
+              await Provider.of<ActivityBase>(context, listen: false)
+                  .deleteActivity(keyToDelete)
+                  .then((value) => Navigator.of(context).pop());
+            },
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
   }
 }

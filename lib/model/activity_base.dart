@@ -30,7 +30,7 @@ class ActivityBase extends ChangeNotifier {
     notifyListeners();
   }
 
-  void deleteActivity(String key) async {
+  Future<void> deleteActivity(String key) async {
     //delete from cache
     activities.remove(key);
     //delete from box
