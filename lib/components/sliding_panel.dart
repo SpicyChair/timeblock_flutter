@@ -151,6 +151,8 @@ class _SlidingPanelState extends State<SlidingPanel> {
   }
 
   Future<void> showConfirmDeletionDialog() async {
-    showDialog(context: context, builder: )
+    showDialog(context: context, builder: () => AlertDialog(
+
+    ))
   }
 }

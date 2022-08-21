@@ -22,11 +22,7 @@ class _NewActivityDialogState extends State<NewActivityDialog> {
   Widget build(BuildContext context) {
     return StatefulBuilder(builder: (context, setState) {
       return AlertDialog(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(15),
-          ),
-        ),
+        shape: kDialogShape,
         title: const Text('New Activity'),
         content: SizedBox(
           height: 140,
@@ -137,7 +133,7 @@ class _NewActivityDialogState extends State<NewActivityDialog> {
         ColorPickerType.accent: false,
         ColorPickerType.bw: false,
         ColorPickerType.custom: false,
-        ColorPickerType.wheel: true,
+        ColorPickerType.wheel: false,
       },
     ).showPickerDialog(
       context,
