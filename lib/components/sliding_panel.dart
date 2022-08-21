@@ -34,9 +34,12 @@ class _SlidingPanelState extends State<SlidingPanel> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(
-            height: 25,
+            height: 20,
           ),
           createSelectedTitle(),
+          const SizedBox(
+            height: 20,
+          ),
           createSelectActivityPanel(),
           const SizedBox(
             height: 20,
@@ -71,7 +74,7 @@ class _SlidingPanelState extends State<SlidingPanel> {
       borderRadius: kMediumBorderRadius,
       child: SizedBox(
         width: double.maxFinite,
-        height: 270,
+        height: MediaQuery.of(context).size.height * 0.33,
         child: Scrollbar(
           controller: controller,
           child: itemCount == 0
@@ -145,5 +148,9 @@ class _SlidingPanelState extends State<SlidingPanel> {
         ],
       ),
     );
+  }
+
+  Future<void> showConfirmDeletionDialog() async {
+    showDialog(context: context, builder: )
   }
 }

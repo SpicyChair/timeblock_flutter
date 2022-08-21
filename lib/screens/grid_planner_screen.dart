@@ -34,7 +34,7 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
   void initState() {
     super.initState();
     gridviewController.addListener(scheduleRebuild);
-    FABHeight = initFABHeight;
+    currentFABHeight = initFABHeight;
   }
 
   @override
@@ -73,7 +73,7 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
   }
 
   final double initFABHeight = 95.0;
-  double FABHeight = 0;
+  double currentFABHeight = 0;
   double panelHeightOpen = 0;
   double panelHeightClosed = 80.0;
 
@@ -82,6 +82,27 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
     panelHeightOpen = MediaQuery.of(context).size.height * .55;
 
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(120),
+        child: SafeArea(
+          child: Consumer<CurrentDayModel>(
+              builder: (context, currentDayModel, child) {
+            return WeeklyDatePicker(
+              selectedDay: Provider.of<CurrentDayModel>(context, listen: true)
+                  .selectedDate,
+              changeDay: (DateTime newDate) async {
+                await Provider.of<CurrentDayModel>(context, listen: false)
+                    .setSelectedDay(newDate);
+              },
+              backgroundColor: Theme.of(context).canvasColor,
+              weekdayTextColor: Theme.of(context).textTheme.titleMedium!.color!,
+              digitsColor: Theme.of(context).textTheme.titleMedium!.color!,
+              selectedBackgroundColor: Colors.blueAccent,
+              enableWeeknumberText: false,
+            );
+          }),
+        ),
+      ),
       body: Stack(
         alignment: Alignment.topCenter,
         children: [
@@ -107,10 +128,10 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
                 onTap: () {
                   if (panelController.isPanelClosed) {
                     //open the panel if closed
-                    panelController.animatePanelToPosition(1.0);
+                    panelController.animatePanelToPosition(1.0, curve: Curves.easeOut, duration: const Duration(milliseconds: 300));
                   } else {
                     //close the panel if open
-                    panelController.animatePanelToPosition(0.0);
+                    panelController.animatePanelToPosition(0.0, curve: Curves.easeOut, duration: const Duration(milliseconds: 300));
                   }
                 },
                 child: SizedBox(
@@ -124,8 +145,8 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
                           Radius.circular(24.0),
                         ),
                       ),
-                      height: 6,
-                      width: 70,
+                      height: 5,
+                      width: 60,
                     ),
                   ),
                 ),
@@ -133,15 +154,15 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
             ),
             onPanelSlide: (double newPos) => setState(() {
               //update the FAB height as panel slides
-              FABHeight = newPos * (panelHeightOpen - panelHeightClosed) +
+              currentFABHeight = newPos * (panelHeightOpen - panelHeightClosed) +
                   initFABHeight;
             }),
           ),
           Visibility(
             visible: selectedIndexes().isNotEmpty,
             child: Positioned(
-              right: 12.0,
-              bottom: FABHeight,
+              right: 20.0,
+              bottom: currentFABHeight,
               child: FloatingActionButton.extended(
                 onPressed: () {
                   removeActivityFromSelectedIntervals();
@@ -169,23 +190,8 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
     return ListView(
       //physics: const BouncingScrollPhysics(),
       children: [
-        Consumer<CurrentDayModel>(builder: (context, currentDayModel, child) {
-          return WeeklyDatePicker(
-            selectedDay: Provider.of<CurrentDayModel>(context, listen: true)
-                .selectedDate,
-            changeDay: (DateTime newDate) async {
-              await Provider.of<CurrentDayModel>(context, listen: false)
-                  .setSelectedDay(newDate);
-            },
-            backgroundColor: Theme.of(context).canvasColor,
-            weekdayTextColor: Theme.of(context).textTheme.titleMedium!.color!,
-            digitsColor: Theme.of(context).textTheme.titleMedium!.color!,
-            selectedBackgroundColor: Colors.blueAccent,
-            enableWeeknumberText: false,
-          );
-        }),
         Padding(
-          padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+          padding: EdgeInsets.fromLTRB(10, 0, 10, panelHeightClosed),
           child: Row(
             children: [
               Flexible(
