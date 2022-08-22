@@ -1,3 +1,4 @@
+import 'package:calendar_appbar/calendar_appbar.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:drag_select_grid_view/drag_select_grid_view.dart';
@@ -85,22 +86,19 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(120),
         child: SafeArea(
-          child: Consumer<CurrentDayModel>(
-              builder: (context, currentDayModel, child) {
-            return WeeklyDatePicker(
-              selectedDay: Provider.of<CurrentDayModel>(context, listen: true)
-                  .selectedDate,
-              changeDay: (DateTime newDate) async {
-                await Provider.of<CurrentDayModel>(context, listen: false)
-                    .setSelectedDay(newDate);
-              },
-              backgroundColor: Theme.of(context).canvasColor,
-              weekdayTextColor: Theme.of(context).textTheme.titleMedium!.color!,
-              digitsColor: Theme.of(context).textTheme.titleMedium!.color!,
-              selectedBackgroundColor: Colors.blueAccent,
-              enableWeeknumberText: false,
-            );
-          }),
+          child: WeeklyDatePicker(
+            selectedDay: Provider.of<CurrentDayModel>(context, listen: true)
+                .selectedDate,
+            changeDay: (DateTime newDate) async {
+              await Provider.of<CurrentDayModel>(context, listen: false)
+                  .setSelectedDay(newDate);
+            },
+            backgroundColor: Theme.of(context).canvasColor,
+            weekdayTextColor: Theme.of(context).textTheme.titleMedium!.color!,
+            digitsColor: Theme.of(context).textTheme.titleMedium!.color!,
+            selectedBackgroundColor: Colors.blueAccent,
+            enableWeeknumberText: false,
+          ),
         ),
       ),
       body: Stack(
@@ -128,10 +126,14 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
                 onTap: () {
                   if (panelController.isPanelClosed) {
                     //open the panel if closed
-                    panelController.animatePanelToPosition(1.0, curve: Curves.easeOut, duration: const Duration(milliseconds: 200));
+                    panelController.animatePanelToPosition(1.0,
+                        curve: Curves.easeOut,
+                        duration: const Duration(milliseconds: 200));
                   } else {
                     //close the panel if open
-                    panelController.animatePanelToPosition(0.0, curve: Curves.easeIn, duration: const Duration(milliseconds: 200));
+                    panelController.animatePanelToPosition(0.0,
+                        curve: Curves.easeIn,
+                        duration: const Duration(milliseconds: 200));
                   }
                 },
                 child: SizedBox(
@@ -154,8 +156,9 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
             ),
             onPanelSlide: (double newPos) => setState(() {
               //update the FAB height as panel slides
-              currentFABHeight = newPos * (panelHeightOpen - panelHeightClosed) +
-                  initFABHeight;
+              currentFABHeight =
+                  newPos * (panelHeightOpen - panelHeightClosed) +
+                      initFABHeight;
             }),
           ),
           Visibility(
