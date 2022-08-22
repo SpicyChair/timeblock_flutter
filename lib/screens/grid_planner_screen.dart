@@ -128,10 +128,10 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
                 onTap: () {
                   if (panelController.isPanelClosed) {
                     //open the panel if closed
-                    panelController.animatePanelToPosition(1.0, curve: Curves.easeOut, duration: const Duration(milliseconds: 300));
+                    panelController.animatePanelToPosition(1.0, curve: Curves.easeOut, duration: const Duration(milliseconds: 200));
                   } else {
                     //close the panel if open
-                    panelController.animatePanelToPosition(0.0, curve: Curves.easeOut, duration: const Duration(milliseconds: 300));
+                    panelController.animatePanelToPosition(0.0, curve: Curves.easeIn, duration: const Duration(milliseconds: 200));
                   }
                 },
                 child: SizedBox(

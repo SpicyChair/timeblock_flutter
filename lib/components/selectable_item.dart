@@ -30,7 +30,7 @@ class _SelectableItemState extends State<SelectableItem>
 
     _controller = AnimationController(
       value: widget.selected ? 1 : 0,
-      duration: const Duration(milliseconds: 275),
+      duration: const Duration(milliseconds: 225),
       vsync: this,
     );
 
