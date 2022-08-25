@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grid_planner_test/components/activity_and_color_dialogs.dart';
+import 'package:grid_planner_test/services/time_helper.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
@@ -62,7 +63,7 @@ class _SlidingPanelState extends State<SlidingPanel> {
         children: <TextSpan>[
           const TextSpan(text: 'Selected: '),
           TextSpan(
-              text: '${widget.selectedIndexes().length}',
+              text: convertSelectedIndexesIntoTime(widget.selectedIndexes()),
               style: const TextStyle(fontWeight: FontWeight.bold)),
         ],
       ),

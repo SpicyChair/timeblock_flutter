@@ -207,7 +207,7 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
                         aspectRatio: 1,
                         child: Center(
                           child: Text(
-                            "$i:00".padLeft(5, '0'),
+                            "$i:00".padLeft(5, ' '),
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
