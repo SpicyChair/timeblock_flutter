@@ -1,4 +1,4 @@
-import 'package:calendar_appbar/calendar_appbar.dart';
+import 'package:calendar_agenda/calendar_agenda.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:drag_select_grid_view/drag_select_grid_view.dart';
@@ -84,23 +84,18 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
     panelHeightOpen = MediaQuery.of(context).size.height * .55;
 
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(120),
-        child: SafeArea(
-          child: WeeklyDatePicker(
-            selectedDay: Provider.of<CurrentDayModel>(context, listen: true)
-                .selectedDate,
-            changeDay: (DateTime newDate) async {
-              await Provider.of<CurrentDayModel>(context, listen: false)
-                  .setSelectedDay(newDate);
-            },
-            backgroundColor: Theme.of(context).canvasColor,
-            weekdayTextColor: Theme.of(context).textTheme.titleMedium!.color!,
-            digitsColor: Theme.of(context).textTheme.titleMedium!.color!,
-            selectedBackgroundColor: Colors.blueAccent,
-            enableWeeknumberText: false,
-          ),
-        ),
+      appBar: CalendarAgenda(
+        initialDate: DateTime.now(),
+        appbar: false,
+        selectedDayPosition: SelectedDayPosition.left,
+        fullCalendarScroll: FullCalendarScroll.horizontal,
+        events: [DateTime.now()],
+        firstDate: DateTime.now().subtract(const Duration(days: 7)),
+        lastDate: DateTime.now().add(const Duration(days: 7)),
+        onDateSelected: (DateTime newDate) async {
+          await Provider.of<CurrentDayModel>(context, listen: false)
+              .setSelectedDay(newDate);
+        },
       ),
       body: Stack(
         alignment: Alignment.topCenter,
