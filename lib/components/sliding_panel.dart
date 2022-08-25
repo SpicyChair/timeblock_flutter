@@ -57,15 +57,20 @@ class _SlidingPanelState extends State<SlidingPanel> {
         style: Theme.of(context).textTheme.titleMedium,
       );
     }
-    return RichText(
-      text: TextSpan(
-        style: Theme.of(context).textTheme.titleMedium,
-        children: <TextSpan>[
-          const TextSpan(text: 'Selected: '),
-          TextSpan(
-              text: convertSelectedIndexesIntoTime(widget.selectedIndexes()),
-              style: const TextStyle(fontWeight: FontWeight.bold)),
-        ],
+    return Flexible(
+      child: RichText(
+        overflow: TextOverflow.ellipsis,
+        maxLines: 2,
+        text: TextSpan(
+          style: Theme.of(context).textTheme.titleMedium,
+          children: <TextSpan>[
+            const TextSpan(text: 'Selected: '),
+            TextSpan(
+                text: convertSelectedIndexesIntoReadable(
+                    widget.selectedIndexes()),
+                style: const TextStyle(fontWeight: FontWeight.bold)),
+          ],
+        ),
       ),
     );
   }
@@ -77,7 +82,7 @@ class _SlidingPanelState extends State<SlidingPanel> {
       borderRadius: kMediumBorderRadius,
       child: SizedBox(
         width: double.maxFinite,
-        height: MediaQuery.of(context).size.height * 0.33,
+        height: MediaQuery.of(context).size.height * 0.31,
         child: Scrollbar(
           controller: controller,
           child: itemCount == 0

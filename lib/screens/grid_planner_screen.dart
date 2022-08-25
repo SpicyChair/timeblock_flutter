@@ -78,6 +78,7 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
   double panelHeightOpen = 0;
   double panelHeightClosed = 80.0;
 
+
   @override
   Widget build(BuildContext context) {
     panelHeightOpen = MediaQuery.of(context).size.height * .55;
@@ -105,6 +106,7 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
         alignment: Alignment.topCenter,
         children: [
           SlidingUpPanel(
+            parallaxEnabled: false,
             controller: panelController,
             color: Theme.of(context).bottomAppBarColor,
             maxHeight: panelHeightOpen,
@@ -282,8 +284,8 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
             ],
           ),
         ),
-        const SizedBox(
-          height: 100,
+        SizedBox(
+          height: currentFABHeight,
         ),
       ],
     );
