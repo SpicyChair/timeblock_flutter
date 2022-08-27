@@ -280,7 +280,7 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
           ),
         ),
         SizedBox(
-          height: currentFABHeight,
+          height: currentFABHeight + 10,
         ),
       ],
     );
