@@ -191,7 +191,7 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
       //physics: const BouncingScrollPhysics(),
       children: [
         Padding(
-          padding: EdgeInsets.fromLTRB(10, 0, 10, panelHeightClosed),
+          padding: EdgeInsets.fromLTRB(10, 10, 10, panelHeightClosed),
           child: Row(
             children: [
               Flexible(
@@ -280,7 +280,7 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
           ),
         ),
         SizedBox(
-          height: currentFABHeight + 10,
+          height: currentFABHeight + 65,
         ),
       ],
     );

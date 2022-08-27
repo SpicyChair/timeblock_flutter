@@ -47,7 +47,8 @@ dependencies:
   weekly_date_picker: ^1.3.0
   calendar_agenda:
     git:
-      url: https://github.com/SpicyChair/calendar_agenda/tree/custom
+      url: https://github.com/SpicyChair/calendar_agenda.git
+      ref: custom
 
 dev_dependencies:
   hive_generator: ^1.1.3

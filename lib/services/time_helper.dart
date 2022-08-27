@@ -27,6 +27,8 @@ String convertIndexToTime(int index) {
 }
 
 List<List<int>> findConsecutiveRanges(List<int> list) {
+  list.sort();
+
   // a list of list<ints>, holds consecutive ranges
   // ie [[1,2,3], [7,8], [11,12,13,14], [17]]
   List<List<int>> result = [];

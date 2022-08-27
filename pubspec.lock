@@ -96,9 +96,9 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: HEAD
-      resolved-ref: "9ee0aa946fbe4020ea1c43bbed2dfd259390ec74"
-      url: "https://github.com/SpicyChair/calendar_agenda"
+      ref: custom
+      resolved-ref: "20d83479a258b5233c6dfad00ecb767013db231f"
+      url: "https://github.com/SpicyChair/calendar_agenda.git"
     source: git
     version: "0.0.2+2"
   characters:
