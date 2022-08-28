@@ -84,19 +84,6 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
     panelHeightOpen = MediaQuery.of(context).size.height * .55;
 
     return Scaffold(
-      appBar: CalendarAgenda(
-        initialDate: DateTime.now(),
-        appbar: false,
-        selectedDayPosition: SelectedDayPosition.left,
-        fullCalendarScroll: FullCalendarScroll.horizontal,
-        events: [DateTime.now()],
-        firstDate: DateTime.now().subtract(const Duration(days: 7)),
-        lastDate: DateTime.now().add(const Duration(days: 7)),
-        onDateSelected: (DateTime newDate) async {
-          await Provider.of<CurrentDayModel>(context, listen: false)
-              .setSelectedDay(newDate);
-        },
-      ),
       body: Stack(
         alignment: Alignment.topCenter,
         children: [
@@ -114,7 +101,13 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
               topLeft: Radius.circular(24.0),
               topRight: Radius.circular(24.0),
             ),
-            body: buildGridView(),
+            body: Stack(
+              children: [
+
+                Positioned(top: 170, left: 0, right: 0, bottom: 0, child: buildGridView(),),
+                buildAppbar(),
+              ],
+            ),
             header: SizedBox(
               width: MediaQuery.of(context).size.width,
               height: 30,
@@ -183,6 +176,36 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget buildAppbar() {
+    return CalendarAgenda(
+      appbar: true,
+      selectedDayPosition: SelectedDayPosition.left,
+      leading: IconButton(
+        icon: Icon(
+          Icons.arrow_back_rounded,
+          color: Theme.of(context).textTheme.titleMedium?.color,
+        ),
+        onPressed: () {},
+      ),
+      weekDay: WeekDay.short,
+      fullCalendarScroll: FullCalendarScroll.horizontal,
+      fullCalendarDay: WeekDay.short,
+      selectedDateColor: Colors.blueAccent,
+      backgroundColor: Theme.of(context).canvasColor,
+      dateColor: Theme.of(context).textTheme.titleMedium?.color,
+      locale: 'en',
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now().subtract(const Duration(days: 60)),
+      lastDate: DateTime.now().add(const Duration(days: 60)),
+      onDateSelected: (date) async {
+        await Provider.of<CurrentDayModel>(context, listen: false)
+            .setSelectedDay(date);
+        setState(() {
+        });
+      },
     );
   }
 
@@ -280,7 +303,7 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
           ),
         ),
         SizedBox(
-          height: currentFABHeight + 65,
+          height: currentFABHeight - 80,
         ),
       ],
     );
