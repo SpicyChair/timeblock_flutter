@@ -30,6 +30,4 @@ class SavedDay {
   String getActivityAt(int interval) {
     return intervals[interval] ?? '';
   }
-
-
 }

@@ -156,21 +156,52 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
             child: Positioned(
               right: 20.0,
               bottom: currentFABHeight,
-              child: FloatingActionButton.extended(
-                onPressed: () {
-                  removeActivityFromSelectedIntervals();
-                },
-                backgroundColor: Colors.redAccent,
-                label: const Text(
-                  "Clear",
-                  style: TextStyle(
-                    color: Colors.white,
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: 100,
+                    child: FloatingActionButton.extended(
+                      onPressed: () {
+                        panelController.open();
+                      },
+                      backgroundColor: Colors.blueAccent,
+                      label: const Text(
+                        "Set",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      icon: const Icon(
+                        Icons.edit_outlined,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
-                ),
-                icon: const Icon(
-                  Icons.clear,
-                  color: Colors.white,
-                ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  SizedBox(
+                    width: 100,
+                    child: FloatingActionButton.extended(
+                      onPressed: () {
+                        removeActivityFromSelectedIntervals();
+                        panelController.close();
+                      },
+                      backgroundColor: Colors.redAccent,
+                      label: const Text(
+                        "Clear",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      icon: const Icon(
+                        Icons.clear,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+
               ),
             ),
           ),

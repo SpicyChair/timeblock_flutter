@@ -19,6 +19,10 @@ String convertSelectedIndexesIntoReadable(Iterable<int> indexes) {
   return result;
 }
 
+int getSelectedIndexesAsLength(Iterable<int> indexes) {
+  return indexes.length * 10;
+}
+
 String convertIndexToTime(int index) {
   if (index == 144) {
     return "0:00";

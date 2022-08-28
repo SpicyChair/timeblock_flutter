@@ -53,24 +53,23 @@ class _SlidingPanelState extends State<SlidingPanel> {
   Widget createSelectedTitle() {
     if (widget.selectedIndexes().isEmpty) {
       return Text(
-        "Current Activity: ",
+        "Select Activity",
         style: Theme.of(context).textTheme.titleMedium,
       );
     }
     return Flexible(
-      child: RichText(
-        overflow: TextOverflow.ellipsis,
-        maxLines: 2,
-        text: TextSpan(
-          style: Theme.of(context).textTheme.titleMedium,
-          children: <TextSpan>[
-            const TextSpan(text: 'Selected: '),
-            TextSpan(
-                text: convertSelectedIndexesIntoReadable(
-                    widget.selectedIndexes()),
-                style: const TextStyle(fontWeight: FontWeight.bold)),
-          ],
-        ),
+      child: Row(
+
+        children: [
+          Flexible(
+            child: Text(convertSelectedIndexesIntoReadable(widget.selectedIndexes()),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis,),
+          ),
+          Text(
+            " | ${getSelectedIndexesAsLength(widget.selectedIndexes())} minutes",
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.normal),
+          ),
+        ],
       ),
     );
   }
