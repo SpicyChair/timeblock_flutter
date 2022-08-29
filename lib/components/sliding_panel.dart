@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grid_planner_test/components/activity_and_color_dialogs.dart';
+import 'package:grid_planner_test/model/current_day_model.dart';
 import 'package:grid_planner_test/services/time_helper.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -51,10 +52,20 @@ class _SlidingPanelState extends State<SlidingPanel> {
   }
 
   Widget createSelectedTitle() {
+
+
+
+
+
     if (widget.selectedIndexes().isEmpty) {
-      return Text(
-        "Select Activity",
-        style: Theme.of(context).textTheme.titleMedium,
+      return Consumer2<ActivityBase, CurrentDayModel>(
+        builder: (context, activityBase, currentDayModel, widget) {
+          final currentInterval = getCurrentInterval();
+          return Text(
+            "Select Activity",
+            style: Theme.of(context).textTheme.titleMedium,
+          );
+        },
       );
     }
     return Flexible(
@@ -119,6 +130,7 @@ class _SlidingPanelState extends State<SlidingPanel> {
       ),
     );
   }
+
 
   Widget createActivityPanelActionButtons() {
     return SizedBox(

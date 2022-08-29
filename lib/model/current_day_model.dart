@@ -16,6 +16,10 @@ class CurrentDayModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  String getActivityAtInterval(int interval) {
+    return selectedDay.getActivityAt(interval);
+  }
+
 
 
   Future<void> setActivityAtInterval(int interval, String key) async {
