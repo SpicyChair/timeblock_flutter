@@ -90,7 +90,7 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
           SlidingUpPanel(
             parallaxEnabled: false,
             controller: panelController,
-            color: Theme.of(context).bottomAppBarColor,
+            color: Theme.of(context).cardColor,
             maxHeight: panelHeightOpen,
             minHeight: panelHeightClosed,
             panel: SlidingPanel(
@@ -98,8 +98,8 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
               setActivityToSelectedIndexes: setActivityToSelectedIntervals,
             ),
             borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(24.0),
-              topRight: Radius.circular(24.0),
+              topLeft: Radius.circular(30.0),
+              topRight: Radius.circular(30.0),
             ),
             body: Stack(
               children: [
@@ -131,9 +131,9 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
                   width: 70,
                   child: Center(
                     child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: const BorderRadius.all(
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFE0E0E0),
+                        borderRadius: BorderRadius.all(
                           Radius.circular(24.0),
                         ),
                       ),
