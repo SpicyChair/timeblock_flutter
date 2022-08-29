@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grid_planner_test/components/activity_and_color_dialogs.dart';
+import 'package:grid_planner_test/model/current_day_model.dart';
 import 'package:grid_planner_test/services/time_helper.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -20,6 +21,7 @@ class SlidingPanel extends StatefulWidget {
   final Function selectedIndexes;
   final Function setActivityToSelectedIndexes;
 
+
   @override
   State<SlidingPanel> createState() => _SlidingPanelState();
 }
@@ -36,7 +38,7 @@ class _SlidingPanelState extends State<SlidingPanel> {
           const SizedBox(
             height: 20,
           ),
-          createSelectedTitle(),
+          createTitle(),
           const SizedBox(
             height: 20,
           ),
@@ -50,10 +52,19 @@ class _SlidingPanelState extends State<SlidingPanel> {
     );
   }
 
-  Widget createSelectedTitle() {
+  Widget createTitle() {
+    var title = "";
     if (widget.selectedIndexes().isEmpty) {
+
+      var activityKey = Provider.of<CurrentDayModel>(context).getActivityKeyAtInterval(getCurrentInterval());
+
+      if (Provider.of<ActivityBase>(context).activityExists(activityKey)) {
+        var currentActivity = Provider.of<ActivityBase>(context).getActivity(activityKey);
+        title = "Currently: ${currentActivity.name}";
+      }
+
       return Text(
-        "Select Activity",
+        title,
         style: Theme.of(context).textTheme.titleMedium,
       );
     }
