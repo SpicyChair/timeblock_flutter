@@ -11,7 +11,7 @@ class ActivityBase extends ChangeNotifier {
   int getSize() => activities.length;
 
   SavedActivity getActivity(String key) {
-    return activities[key] ?? SavedActivity(name: '', key: '', colorAsString: '');
+    return activities[key] ?? SavedActivity(name: '', key: '', colorAsString: 'FFFFFF');
   }
 
   bool activityExists(String key) => activities.containsKey(key);
