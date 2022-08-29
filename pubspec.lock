@@ -97,7 +97,7 @@ packages:
     description:
       path: "."
       ref: custom
-      resolved-ref: "9ec4e6a1aee7a363c83a13e925737d6eb4449721"
+      resolved-ref: e2b946961cde79e63b4916e876bc849d43c48b41
       url: "https://github.com/SpicyChair/calendar_agenda.git"
     source: git
     version: "0.0.2+2"
