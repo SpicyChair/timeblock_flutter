@@ -53,3 +53,11 @@ List<List<int>> findConsecutiveRanges(List<int> list) {
   return result;
 
 }
+
+int getCurrentInterval() {
+  final now = DateTime.now();
+  final lastMidnight = DateTime(now.year, now.month, now.day);
+  //print(lastMidnight);
+  //ten minutes per interval
+  return now.difference(lastMidnight).inMinutes ~/ 10;
+}
