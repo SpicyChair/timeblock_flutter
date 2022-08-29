@@ -53,5 +53,3 @@ List<List<int>> findConsecutiveRanges(List<int> list) {
   return result;
 
 }
-
-

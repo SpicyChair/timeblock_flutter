@@ -306,10 +306,10 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
                         if (currentDayModel.hasActivityAtInterval(index)) {
                           //get the activity key
                           var key =
-                              currentDayModel!.getActivityKeyAtInterval(index);
+                              currentDayModel.getActivityKeyAtInterval(index);
 
                           //check if activity exists
-                          if (activityBase.activityExists(key)) {
+                          if (!activityBase.activityExists(key)) {
                             //if not, remove it from the current day
                             //used if user deletes a previously set activity
                             currentDayModel.removeActivityAtInterval(index);
