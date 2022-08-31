@@ -168,7 +168,7 @@ class _SlidingPanelState extends State<SlidingPanel> {
           const SizedBox(
             width: 20,
           ),
-          
+
            */
           Expanded(
             child: ElevatedButton(
