@@ -39,6 +39,15 @@ class ActivityBase extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> editActivity(String key, Color newColor, String newName) async {
+    final activity = SavedActivity(name: newName, key: key, colorAsString: getColorAsString(newColor));
+    activities[key] = activity;
+
+    await box.put(key, activity);
+
+    notifyListeners();
+  }
+
 
 
   String keyGenerator() {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:grid_planner_test/components/activity_and_color_dialogs.dart';
+import 'package:grid_planner_test/components/activity_dialog.dart';
 import 'package:grid_planner_test/model/current_day_model.dart';
 import 'package:grid_planner_test/services/time_helper.dart';
 import 'package:hive/hive.dart';
@@ -116,15 +116,22 @@ class _SlidingPanelState extends State<SlidingPanel> {
                   itemBuilder: (context, index) {
                     return Consumer<ActivityBase>(
                       builder: (context, activityBase, child) {
+
+                        // activities is a k:v pair
+                        // get the list of values
+                        // this does not guarantee a sorted list
+
+                        //TODO: ALLOW FOR SORTING OF ACTIVITY LIST
                         SavedActivity activity =
                             activityBase.activities.values.toList()[index];
                         return ActivityTile(
                           activity: activity,
                           onTap: widget.setActivityToSelectedIndexes,
-                          onDeleteActivity: showConfirmDeletionDialog,
-                          context: context,
-                          //TODO: OPEN DIALOG TO EDIT ACTIVITY
-                          onEditActivity: () {},
+                          onLongPress: (SavedActivity toEdit) {
+                            showDialog(context: context, builder: (context) {
+                              return ActivityDialog(edit: true, activity: toEdit,);
+                            });
+                          },
                         );
                       },
                     );
@@ -166,7 +173,7 @@ class _SlidingPanelState extends State<SlidingPanel> {
                 await showDialog(
                     context: context,
                     builder: (context) {
-                      return NewActivityDialog();
+                      return ActivityDialog();
                     });
                 setState(() {});
               },
