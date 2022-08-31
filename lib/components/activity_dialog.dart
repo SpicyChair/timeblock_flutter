@@ -7,31 +7,36 @@ import '../constants.dart';
 import '../model/activity_base.dart';
 import '';
 
-class NewActivityDialog extends StatefulWidget {
+class ActivityDialog extends StatefulWidget {
   bool edit;
-  String? activityKey;
-  Color pickerColor = Colors.blueAccent;
-  String activityName = "";
+  String _activityKey = "";
+  SavedActivity? activity;
 
-  NewActivityDialog(
-      {Key? key,
-      this.edit = false,
-      this.activityKey,
-      this.pickerColor = Colors.blueAccent,
-      this.activityName = ""})
-      : super(key: key);
+  Color _pickerColor = Colors.blueAccent;
+  String _newActivityName = "";
+
+  ActivityDialog({Key? key, this.edit = false, this.activity})
+      : super(key: key) {
+    if (edit && activity != null) {
+      _pickerColor = activity?.getColor() ?? Colors.blueAccent;
+      _newActivityName = activity?.name ?? "";
+      _activityKey = activity?.key ?? "";
+    }
+  }
 
   @override
-  State<NewActivityDialog> createState() => _NewActivityDialogState();
+  State<ActivityDialog> createState() => _ActivityDialogState();
 }
 
-class _NewActivityDialogState extends State<NewActivityDialog> {
+class _ActivityDialogState extends State<ActivityDialog> {
   @override
   Widget build(BuildContext context) {
     return StatefulBuilder(builder: (context, setState) {
       return AlertDialog(
         shape: kDialogShape,
-        title: const Text('New Activity'),
+        title: widget.edit
+            ? const Text('Edit Activity')
+            : const Text('New Activity'),
         content: SizedBox(
           height: 140,
           width: double.maxFinite,
@@ -43,7 +48,7 @@ class _NewActivityDialogState extends State<NewActivityDialog> {
                 shape: RoundedRectangleBorder(
                   borderRadius: kMediumBorderRadius,
                 ),
-                tileColor: widget.pickerColor,
+                tileColor: widget._pickerColor,
                 title: const Center(child: Text("Change Color")),
                 onTap: () async {
                   await colorPickerDialog();
@@ -54,9 +59,10 @@ class _NewActivityDialogState extends State<NewActivityDialog> {
                 height: 15,
               ),
               TextField(
-                controller: TextEditingController()..text = widget.activityName,
+                controller: TextEditingController()
+                  ..text = widget._newActivityName,
                 onChanged: (newValue) {
-                  widget.activityName = newValue;
+                  widget._newActivityName = newValue;
                 },
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
@@ -70,21 +76,41 @@ class _NewActivityDialogState extends State<NewActivityDialog> {
           ),
         ),
         actions: <Widget>[
+
+          Visibility(
+            visible: widget.edit,
+            child: TextButton(
+              style: TextButton.styleFrom(
+                primary: Colors.redAccent,
+              ),
+              onPressed: () async {
+                final navigator = Navigator.of(context);
+                await showConfirmDeletionDialog(widget._activityKey);
+                navigator.pop();
+              },
+              child: const Text('Delete Activity'),
+            ),
+          ),
+
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: const Text("Cancel"),
           ),
+
           widget.edit
               ? ElevatedButton(
                   onPressed: () {
-                    //TODO: EDIT ACTIVITY
+                    Provider.of<ActivityBase>(context, listen: false)
+                        .editActivity(widget._activityKey, widget._pickerColor,
+                            widget._newActivityName);
+                    Navigator.of(context).pop();
                   },
                   child: const Text('Done'))
               : ElevatedButton(
                   onPressed: () {
                     Provider.of<ActivityBase>(context, listen: false)
                         .createNewActivity(
-                            widget.activityName, widget.pickerColor);
+                            widget._newActivityName, widget._pickerColor);
 
                     Navigator.of(context).pop();
                   },
@@ -98,10 +124,10 @@ class _NewActivityDialogState extends State<NewActivityDialog> {
   Future<bool> colorPickerDialog() async {
     return ColorPicker(
       // Use the dialogPickerColor as start color.
-      color: widget.pickerColor,
+      color: widget._pickerColor,
       // Update the dialogPickerColor using the callback.
       onColorChanged: (Color color) =>
-          setState(() => widget.pickerColor = color),
+          setState(() => widget._pickerColor = color),
       width: 40,
       height: 40,
       borderRadius: 4,
@@ -143,5 +169,33 @@ class _NewActivityDialogState extends State<NewActivityDialog> {
     );
   }
 
-
+  Future<void> showConfirmDeletionDialog(String keyToDelete) async {
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: kDialogShape,
+        title: const Text("Delete Activity?"),
+        content:
+        const Text("This will also delete any entries of this activity."),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text("Cancel"),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: Colors.redAccent,
+              onPrimary: Colors.white,
+            ),
+            onPressed: () async {
+              await Provider.of<ActivityBase>(context, listen: false)
+                  .deleteActivity(keyToDelete)
+                  .then((value) => Navigator.of(context).pop());
+            },
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+  }
 }
