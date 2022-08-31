@@ -39,11 +39,15 @@ class MyApp extends StatelessWidget {
       darkTheme: ThemeData(
         brightness: Brightness.dark,
         useMaterial3: true, colorScheme: ColorScheme.fromSwatch(brightness: Brightness.dark).copyWith(secondary: Colors.blueAccent),
+        inputDecorationTheme:
+        const InputDecorationTheme(border: OutlineInputBorder()),
       ),
       theme: ThemeData(
         brightness: Brightness.light,
         useMaterial3: true,
         colorScheme: ColorScheme.fromSwatch(brightness: Brightness.light).copyWith(secondary: Colors.blueAccent),
+        inputDecorationTheme:
+        const InputDecorationTheme(border: OutlineInputBorder()),
       ),
       debugShowCheckedModeBanner: false,
       home: const LoadingScreen(),
