@@ -21,7 +21,6 @@ class SlidingPanel extends StatefulWidget {
   final Function selectedIndexes;
   final Function setActivityToSelectedIndexes;
 
-
   @override
   State<SlidingPanel> createState() => _SlidingPanelState();
 }
@@ -55,11 +54,12 @@ class _SlidingPanelState extends State<SlidingPanel> {
   Widget createTitle() {
     var title = "";
     if (widget.selectedIndexes().isEmpty) {
-
-      var activityKey = Provider.of<CurrentDayModel>(context).getActivityKeyAtInterval(getCurrentInterval());
+      var activityKey = Provider.of<CurrentDayModel>(context)
+          .getActivityKeyAtInterval(getCurrentInterval());
 
       if (Provider.of<ActivityBase>(context).activityExists(activityKey)) {
-        var currentActivity = Provider.of<ActivityBase>(context).getActivity(activityKey);
+        var currentActivity =
+            Provider.of<ActivityBase>(context).getActivity(activityKey);
         title = "Currently: ${currentActivity.name}";
       }
 
@@ -70,15 +70,24 @@ class _SlidingPanelState extends State<SlidingPanel> {
     }
     return Flexible(
       child: Row(
-
         children: [
           Flexible(
-            child: Text(convertSelectedIndexesIntoReadable(widget.selectedIndexes()),
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis,),
+            child: Text(
+              convertSelectedIndexesIntoReadable(widget.selectedIndexes()),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(fontWeight: FontWeight.bold),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
           Text(
             " | ${getSelectedIndexesAsLength(widget.selectedIndexes())} minutes",
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.normal),
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium
+                ?.copyWith(fontWeight: FontWeight.normal),
           ),
         ],
       ),
@@ -112,7 +121,10 @@ class _SlidingPanelState extends State<SlidingPanel> {
                         return ActivityTile(
                           activity: activity,
                           onTap: widget.setActivityToSelectedIndexes,
-                          onLongPress: showConfirmDeletionDialog,
+                          onDeleteActivity: showConfirmDeletionDialog,
+                          context: context,
+                          //TODO: OPEN DIALOG TO EDIT ACTIVITY
+                          onEditActivity: () {},
                         );
                       },
                     );
@@ -154,7 +166,7 @@ class _SlidingPanelState extends State<SlidingPanel> {
                 await showDialog(
                     context: context,
                     builder: (context) {
-                      return const NewActivityDialog();
+                      return NewActivityDialog();
                     });
                 setState(() {});
               },
