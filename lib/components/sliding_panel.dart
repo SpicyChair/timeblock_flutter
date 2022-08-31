@@ -156,6 +156,7 @@ class _SlidingPanelState extends State<SlidingPanel> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          /*
           Expanded(
             child: OutlinedButton(
               onPressed: () {},
@@ -167,6 +168,8 @@ class _SlidingPanelState extends State<SlidingPanel> {
           const SizedBox(
             width: 20,
           ),
+          
+           */
           Expanded(
             child: ElevatedButton(
               onPressed: () async {
