@@ -84,6 +84,7 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
     panelHeightOpen = MediaQuery.of(context).size.height * .55;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         alignment: Alignment.topCenter,
         children: [
