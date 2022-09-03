@@ -45,6 +45,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         brightness: Brightness.light,
         useMaterial3: true,
+        canvasColor: Colors.grey[100],
         colorScheme: ColorScheme.fromSwatch(brightness: Brightness.light).copyWith(secondary: Colors.blueAccent),
         inputDecorationTheme:
         const InputDecorationTheme(border: OutlineInputBorder()),
