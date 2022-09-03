@@ -8,3 +8,5 @@ ShapeBorder kDialogShape = const RoundedRectangleBorder(
     Radius.circular(15),
   ),
 );
+
+BorderRadius kHomeScreenTileBorderRadius = const BorderRadius.all(Radius.circular(20));
