@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:grid_planner_test/model/current_day_model.dart';
 import 'package:grid_planner_test/screens/grid_planner_screen.dart';
+import 'package:grid_planner_test/screens/nav_bar_screen.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
@@ -15,29 +16,34 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
+
+  Future<void> loadFromBoxes() async {
+    var activities = Provider.of<ActivityBase>(context, listen: false).loadActivitiesFromBox();
+    var currentDay = Provider.of<CurrentDayModel>(context, listen: false).loadCurrentDayFromBox();
+
+    await activities;
+    await currentDay;
+  }
   @override
   void initState() {
     super.initState();
+    //load data from the hive box into activitybase and currentdaymodel
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-
-      //load data from the hive box into activitybase and currentdaymodel
-      Provider.of<ActivityBase>(context, listen: false).loadActivitiesFromBox();
-
-      Provider.of<CurrentDayModel>(context, listen: false).loadCurrentDayFromBox();
-
-
-      //then push to homescreen
-      Navigator.pushReplacement(
-        context,
-        PageTransition(
-          type: PageTransitionType.fade,
-          duration: const Duration(milliseconds: 200),
-          child: const GridPlannerScreen(),
-          //duration: const Duration(seconds: 1),
-        ),
-      );
-    });
+    loadFromBoxes().whenComplete(() {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        //then push to homescreen
+        Navigator.pushReplacement(
+          context,
+          PageTransition(
+            type: PageTransitionType.fade,
+            duration: const Duration(milliseconds: 200),
+            child: const NavBarScreen(),
+            //duration: const Duration(seconds: 1),
+          ),
+        );
+      });
+    }
+    );
   }
 
   @override
