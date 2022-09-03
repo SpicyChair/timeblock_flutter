@@ -59,7 +59,8 @@ class ActivityBase extends ChangeNotifier {
     return color.value.toString();
   }
 
-  void loadActivitiesFromBox() {
+  Future<void> loadActivitiesFromBox() async {
+    box = Hive.box<SavedActivity>('activities');
     for (var activity in box.values) {
       activities[activity.key] = activity;
     }
