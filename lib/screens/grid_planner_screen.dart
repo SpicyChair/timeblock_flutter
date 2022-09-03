@@ -118,13 +118,13 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
                   if (panelController.isPanelClosed) {
                     //open the panel if closed
                     panelController.animatePanelToPosition(1.0,
-                        curve: Curves.easeOut,
-                        duration: const Duration(milliseconds: 200));
+                        curve: Curves.easeInOutQuint,
+                        duration: const Duration(milliseconds: 175));
                   } else {
                     //close the panel if open
                     panelController.animatePanelToPosition(0.0,
-                        curve: Curves.easeIn,
-                        duration: const Duration(milliseconds: 200));
+                        curve: Curves.easeInOutQuint,
+                        duration: const Duration(milliseconds: 175));
                   }
                 },
                 child: SizedBox(
@@ -216,11 +216,10 @@ class _GridPlannerScreenState extends State<GridPlannerScreen> {
       appbar: true,
       selectedDayPosition: SelectedDayPosition.left,
       leading: IconButton(
-        icon: Icon(
+        icon: const Icon(
           Icons.arrow_back_rounded,
-          color: Theme.of(context).textTheme.titleMedium?.color,
         ),
-        onPressed: () {},
+        onPressed: () => Navigator.of(context).pop(),
       ),
       weekDay: WeekDay.short,
       fullCalendarScroll: FullCalendarScroll.horizontal,
