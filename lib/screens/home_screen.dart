@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 5),
               child: Text(
-                "How will you spend your time?",
+                "How will you spend your time today?",
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ),
