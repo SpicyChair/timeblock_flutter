@@ -33,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Text(
-              "Good Morning",
+              greeting(),
               style: Theme.of(context).textTheme.displaySmall,
             ),
             Padding(
@@ -86,5 +86,16 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     ));
+  }
+
+  String greeting() {
+    var hour = DateTime.now().hour;
+    if (hour < 12) {
+      return 'Good Morning';
+    }
+    if (hour < 18) {
+      return 'Good Afternoon';
+    }
+    return 'Good Evening';
   }
 }
